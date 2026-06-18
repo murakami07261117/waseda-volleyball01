@@ -1,1 +1,1 @@
-# waseda-volleyball01
+# waseda-osaka-volleyball
