@@ -1,0 +1,1821 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ── TOKEN SYSTEM ── */
+:root{
+  /* 早稲田大阪スクールカラー */
+  --navy:    #0D1530;  /* ベース背景 */
+  --navy-2:  #16213E;  /* カード背景 */
+  --navy-3:  #1E2D4F;  /* サブカード */
+  --gold:    #C9A84C;  /* アクセント・早稲田ゴールド */
+  --gold-l:  #E8D08A;  /* ゴールドライト */
+  --gold-dim:#7A6430;  /* ゴールドダーク */
+  --crimson: #A8232A;  /* 早稲田クリムゾン */
+  --crimson-l:#D94048; /* クリムゾンライト */
+  --off-white:#F0EEE8; /* テキスト */
+  --muted:   #8A9BBE;  /* サブテキスト */
+  --line:    rgba(201,168,76,.18); /* 細ラインgold */
+  --line2:   rgba(240,238,232,.08);/* 細ライングレー */
+
+  /* セマンティック */
+  --accent:  var(--gold);
+  --danger:  var(--crimson-l);
+  --ok:      #4CAF82;
+  --info:    #5B8FD4;
+  --warn:    #D4913A;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+
+body{
+  font-family:'Noto Sans JP',sans-serif;
+  background:var(--navy);
+  color:var(--off-white);
+  min-height:100vh;
+  padding-bottom:72px;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:2px}
+
+/* ══════════════════════════
+   HEADER
+══════════════════════════ */
+.hdr{
+  position:sticky;top:0;z-index:200;
+  background:var(--navy);
+  border-bottom:1px solid var(--line);
+  padding:0 16px;
+}
+.hdr-inner{
+  display:flex;align-items:center;gap:12px;
+  height:52px;
+}
+.hdr-logo{
+  width:32px;height:32px;
+  border:1.5px solid var(--gold);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--navy-3),var(--navy));
+}
+.hdr-title{
+  font-family:'Noto Serif JP',serif;
+  font-size:15px;font-weight:700;
+  letter-spacing:.04em;
+  color:var(--off-white);
+  flex:1;
+}
+.hdr-sub{
+  font-size:9px;font-weight:300;
+  color:var(--muted);
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  display:block;margin-top:1px;
+}
+.hdr-badge{
+  font-size:9px;font-weight:700;
+  letter-spacing:.1em;
+  color:var(--gold);
+  border:1px solid var(--gold-dim);
+  padding:2px 8px;border-radius:2px;
+  flex-shrink:0;
+}
+
+/* ══════════════════════════
+   BOTTOM NAV
+══════════════════════════ */
+.bnav{
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:rgba(13,21,48,.96);
+  backdrop-filter:blur(12px);
+  border-top:1px solid var(--line);
+  display:flex;
+}
+.nb{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:8px 2px 10px;
+  border:none;background:transparent;
+  color:var(--muted);font-size:8.5px;
+  font-family:'Noto Sans JP',sans-serif;
+  letter-spacing:.04em;
+  cursor:pointer;gap:4px;
+  transition:color .2s;
+  position:relative;
+}
+.nb::after{
+  content:'';position:absolute;top:0;left:50%;
+  transform:translateX(-50%);
+  width:0;height:2px;
+  background:var(--gold);
+  border-radius:0 0 2px 2px;
+  transition:width .25s ease;
+}
+.nb.active::after{width:24px}
+.nb .ni{font-size:18px;line-height:1}
+.nb.active{color:var(--gold)}
+.nb.active .nl{font-weight:700;color:var(--off-white)}
+
+/* ══════════════════════════
+   PAGE
+══════════════════════════ */
+.page{display:none;padding:16px 14px 8px;animation:pgIn .22s ease}
+.page.active{display:block}
+@keyframes pgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ── SECTION LABEL ── */
+.ey{
+  font-size:9px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:var(--gold-dim);
+  margin:24px 0 12px;
+  display:flex;align-items:center;gap:10px;
+}
+.ey::before{content:'';width:3px;height:3px;border-radius:50%;background:var(--gold);flex-shrink:0}
+.ey::after{content:'';flex:1;height:1px;background:var(--line)}
+.ey:first-child{margin-top:4px}
+
+/* ══════════════════════════
+   CARD SYSTEM
+══════════════════════════ */
+.card{
+  background:var(--navy-2);
+  border:1px solid var(--line2);
+  border-radius:12px;
+  padding:16px;
+  margin-bottom:10px;
+}
+.card p,.card li{
+  font-size:13px;color:rgba(240,238,232,.7);
+  line-height:1.8;
+}
+.card ul{padding-left:1.1rem}
+.card li{margin-bottom:5px}
+
+/* ── HIGHLIGHT BOXES ── */
+.hb{
+  border-radius:8px;
+  padding:12px 14px;
+  margin-bottom:10px;
+  font-size:13px;line-height:1.75;
+}
+.hb strong{font-weight:700}
+.hb-gold{
+  background:rgba(201,168,76,.08);
+  border-left:3px solid var(--gold);
+  color:var(--gold-l);
+}
+.hb-crimson{
+  background:rgba(168,35,42,.12);
+  border-left:3px solid var(--crimson-l);
+  color:#F4A0A5;
+}
+.hb-ok{
+  background:rgba(76,175,130,.1);
+  border-left:3px solid var(--ok);
+  color:#80D4AA;
+}
+.hb-info{
+  background:rgba(91,143,212,.1);
+  border-left:3px solid var(--info);
+  color:#9DC0E8;
+}
+.hb-warn{
+  background:rgba(212,145,58,.1);
+  border-left:3px solid var(--warn);
+  color:#E8B870;
+}
+.hb-muted{
+  background:rgba(138,155,190,.08);
+  border-left:3px solid var(--muted);
+  color:var(--muted);
+}
+
+/* ── BADGE ── */
+.bdg{
+  display:inline-flex;align-items:center;
+  font-size:10px;font-weight:700;
+  letter-spacing:.04em;
+  padding:3px 9px;border-radius:2px;
+  margin:2px 3px 2px 0;
+}
+.b-gold{background:rgba(201,168,76,.15);color:var(--gold);border:1px solid rgba(201,168,76,.3)}
+.b-crim{background:rgba(168,35,42,.15);color:var(--crimson-l);border:1px solid rgba(168,35,42,.3)}
+.b-ok{background:rgba(76,175,130,.12);color:#80D4AA;border:1px solid rgba(76,175,130,.25)}
+.b-info{background:rgba(91,143,212,.12);color:#9DC0E8;border:1px solid rgba(91,143,212,.25)}
+.b-warn{background:rgba(212,145,58,.12);color:#E8B870;border:1px solid rgba(212,145,58,.25)}
+.b-muted{background:rgba(138,155,190,.1);color:var(--muted);border:1px solid rgba(138,155,190,.2)}
+
+/* ══════════════════════════
+   GOAL PAGE
+══════════════════════════ */
+.team-motto{
+  text-align:center;
+  padding:20px 16px;
+  margin-bottom:4px;
+  position:relative;
+}
+.team-motto::before,.team-motto::after{
+  content:'';position:absolute;
+  left:50%;transform:translateX(-50%);
+  width:40px;height:1px;background:var(--gold-dim);
+}
+.team-motto::before{top:0}
+.team-motto::after{bottom:0}
+.team-motto-en{
+  font-size:8px;font-weight:700;
+  letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold-dim);margin-bottom:6px;
+}
+.team-motto-ja{
+  font-family:'Noto Serif JP',serif;
+  font-size:18px;font-weight:700;
+  letter-spacing:.06em;
+  color:var(--off-white);
+}
+.team-motto-sub{
+  font-size:10px;color:var(--muted);
+  margin-top:4px;letter-spacing:.08em;
+}
+
+/* COUNTDOWN */
+.cd-row{display:flex;gap:8px;margin-bottom:4px}
+.cd-box{
+  flex:1;
+  background:var(--navy-2);
+  border:1px solid var(--line2);
+  border-radius:10px;
+  padding:14px 8px;
+  text-align:center;
+  position:relative;overflow:hidden;
+}
+.cd-box::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--gold);
+  opacity:.6;
+}
+.cd-box.c-gold::before{background:var(--gold)}
+.cd-box.c-crim::before{background:var(--crimson-l)}
+.cd-box.c-info::before{background:var(--info)}
+.cd-num{
+  font-size:36px;font-weight:300;
+  line-height:1;letter-spacing:-2px;
+  color:var(--off-white);
+}
+.cd-unit{font-size:9px;color:var(--muted);margin-top:2px;font-weight:400}
+.cd-name{
+  font-size:10px;font-weight:700;
+  color:var(--gold);margin-top:6px;
+  line-height:1.3;
+}
+.cd-date{font-size:9px;color:var(--muted);margin-top:2px}
+
+/* GOAL CARD */
+.goal-card{
+  background:var(--navy-2);
+  border:1px solid var(--line2);
+  border-radius:12px;
+  padding:16px;margin-bottom:10px;
+  position:relative;overflow:hidden;
+}
+.goal-card::after{
+  content:'';position:absolute;
+  top:0;left:0;bottom:0;width:3px;
+}
+.gc-near::after{background:var(--gold)}
+.gc-mid::after{background:var(--crimson-l)}
+.gc-far::after{background:var(--info)}
+.goal-date{
+  font-size:9px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:6px;
+}
+.goal-title{
+  font-family:'Noto Serif JP',serif;
+  font-size:16px;font-weight:700;
+  color:var(--off-white);margin-bottom:8px;
+}
+.goal-body{font-size:13px;color:rgba(240,238,232,.65);line-height:1.75}
+.goal-tags{margin-top:10px}
+
+/* MINDSET */
+.mindset-card{
+  background:var(--navy-2);
+  border:1px solid var(--line2);
+  border-radius:10px;
+  padding:14px 15px;margin-bottom:8px;
+  display:flex;gap:12px;align-items:flex-start;
+}
+.ms-ico{
+  width:36px;height:36px;
+  border-radius:8px;
+  border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+  background:rgba(201,168,76,.06);
+}
+.ms-title{
+  font-size:13px;font-weight:700;
+  color:var(--off-white);margin-bottom:4px;
+}
+.ms-body{font-size:12px;color:rgba(240,238,232,.6);line-height:1.7}
+
+/* STYLE BOX */
+.style-card{
+  background:var(--navy-2);
+  border:1px solid var(--gold-dim);
+  border-radius:12px;
+  padding:16px;
+  margin-bottom:10px;
+}
+.style-label{
+  font-size:9px;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--gold-dim);margin-bottom:8px;
+}
+.style-title{
+  font-family:'Noto Serif JP',serif;
+  font-size:15px;font-weight:700;
+  color:var(--gold-l);
+  margin-bottom:8px;
+  display:flex;align-items:center;gap:8px;
+}
+.rule-box{
+  background:rgba(201,168,76,.07);
+  border:1px solid rgba(201,168,76,.2);
+  border-radius:8px;
+  padding:10px 13px;
+  font-size:12.5px;
+  color:var(--gold-l);
+  line-height:1.7;
+  margin-top:10px;
+}
+.rule-box strong{color:var(--gold)}
+
+/* ══════════════════════════
+   MEMBERS PAGE
+══════════════════════════ */
+.mg{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;margin-bottom:12px;
+}
+.mc{
+  background:var(--navy-2);
+  border:1px solid var(--line2);
+  border-radius:10px;
+  padding:12px 13px;
+  cursor:pointer;
+  transition:border-color .2s,background .2s;
+  position:relative;
+  overflow:hidden;
+}
+.mc::before{
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:2px;
+  background:var(--line2);
+  transition:background .2s;
+}
+.mc.cap::before{background:var(--gold)}
+.mc.vcap::before{background:var(--gold-dim)}
+.mc.exp::before{background:var(--ok)}
+.mc.pot::before{background:var(--info)}
+.mc:active{background:var(--navy-3)}
+.mn{
+  font-size:12.5px;font-weight:700;
+  color:var(--off-white);margin-bottom:5px;
+  line-height:1.3;
+}
+.mnote{
+  font-size:10px;color:var(--muted);
+  margin-top:3px;line-height:1.4;
+}
+
+/* MODAL */
+.modal-overlay{
+  display:none;position:fixed;inset:0;z-index:300;
+  background:rgba(10,16,38,.75);
+  backdrop-filter:blur(6px);
+  align-items:flex-end;
+}
+.modal-overlay.open{display:flex}
+.modal{
+  background:var(--navy-2);
+  border:1px solid var(--line);
+  border-radius:20px 20px 0 0;
+  width:100%;max-height:88vh;
+  overflow-y:auto;
+  padding:20px 16px 48px;
+  position:relative;
+}
+.modal-handle{
+  width:32px;height:3px;
+  background:var(--line);
+  border-radius:2px;
+  margin:0 auto 20px;
+}
+.modal-close{
+  position:absolute;top:18px;right:16px;
+  background:rgba(138,155,190,.12);
+  border:1px solid var(--line2);
+  border-radius:50%;width:28px;height:28px;
+  font-size:14px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--muted);
+}
+.modal-name{
+  font-family:'Noto Serif JP',serif;
+  font-size:18px;font-weight:700;
+  color:var(--off-white);
+}
+.modal-meta{
+  font-size:11px;color:var(--muted);
+  margin-top:4px;margin-bottom:16px;
+  line-height:1.6;letter-spacing:.02em;
+}
+
+/* ══════════════════════════
+   PRACTICE MENU PAGE
+══════════════════════════ */
+.ph{
+  display:flex;align-items:center;gap:10px;
+  background:linear-gradient(90deg,rgba(201,168,76,.12) 0%,transparent 100%);
+  border:1px solid var(--line);
+  border-left:3px solid var(--gold);
+  border-radius:0 8px 8px 0;
+  padding:10px 14px;
+  margin:16px 0 8px;
+  font-size:13px;font-weight:700;
+  color:var(--off-white);
+  letter-spacing:.02em;
+}
+.ph-time{
+  margin-left:auto;
+  font-size:9px;font-weight:700;
+  letter-spacing:.1em;
+  color:var(--gold-dim);
+  border:1px solid var(--gold-dim);
+  padding:2px 8px;border-radius:2px;
+}
+.mi{
+  background:var(--navy-2);
+  border:1px solid var(--line2);
+  border-radius:10px;
+  padding:12px 14px;margin-bottom:8px;
+}
+.mi-h{
+  display:flex;justify-content:space-between;
+  align-items:flex-start;margin-bottom:6px;
+}
+.mi-n{
+  font-size:13px;font-weight:700;
+  color:var(--off-white);flex:1;
+}
+.mi-t{
+  font-size:10px;color:var(--muted);
+  white-space:nowrap;margin-left:10px;
+  letter-spacing:.04em;
+}
+.mi-d{
+  font-size:12.5px;
+  color:rgba(240,238,232,.65);
+  line-height:1.75;
+}
+.mi-w{
+  margin-top:8px;
+  font-size:11.5px;
+  color:var(--gold-l);
+  background:rgba(201,168,76,.07);
+  border-radius:6px;
+  padding:7px 10px;
+  display:flex;gap:6px;
+  line-height:1.5;
+  border-left:2px solid var(--gold-dim);
+}
+.mi-w::before{content:'💡';flex-shrink:0}
+
+/* VIDEO LINK */
+.video-link{
+  display:flex;align-items:center;gap:12px;
+  background:var(--navy-2);
+  border:1px solid var(--line2);
+  border-radius:10px;
+  padding:13px 14px;
+  text-decoration:none;color:inherit;
+  margin-bottom:8px;
+  transition:border-color .2s;
+}
+.video-link:active{border-color:var(--gold-dim)}
+.vthumb{
+  width:42px;height:42px;
+  border-radius:8px;
+  background:rgba(168,35,42,.7);
+  border:1px solid rgba(168,35,42,.4);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;color:#fff;
+}
+.vt{font-size:13px;font-weight:700;color:var(--off-white)}
+.vs{font-size:10px;color:var(--muted);margin-top:2px}
+
+/* ══════════════════════════
+   TECHNIQUE PAGE
+══════════════════════════ */
+.stab-wrap{
+  display:flex;gap:6px;
+  margin-bottom:14px;
+  overflow-x:auto;padding-bottom:2px;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.stab-wrap::-webkit-scrollbar{display:none}
+.stab{
+  flex:none;
+  padding:7px 16px;
+  cursor:pointer;
+  font-size:11.5px;font-weight:700;
+  letter-spacing:.04em;
+  border:1px solid var(--line2);
+  font-family:'Noto Sans JP',sans-serif;
+  border-radius:3px;
+  background:transparent;
+  color:var(--muted);
+  transition:all .18s;white-space:nowrap;
+}
+.stab.active{
+  background:var(--gold);
+  color:var(--navy);
+  border-color:var(--gold);
+}
+
+.cat-wrap{
+  display:flex;gap:6px;flex-wrap:wrap;
+  margin-bottom:14px;
+}
+.cat-btn{
+  padding:6px 12px;
+  cursor:pointer;font-size:11px;font-weight:700;
+  letter-spacing:.03em;
+  border:1px solid var(--line2);
+  font-family:'Noto Sans JP',sans-serif;
+  border-radius:3px;
+  background:transparent;
+  color:var(--muted);
+  transition:all .18s;white-space:nowrap;
+}
+.cat-btn.active{
+  background:rgba(201,168,76,.12);
+  color:var(--gold-l);
+  border-color:var(--gold-dim);
+}
+
+/* ACCORDION */
+.ac{margin-bottom:8px}
+.ac-h{
+  background:var(--navy-2);
+  border:1px solid var(--line2);
+  border-radius:8px;
+  padding:12px 14px;
+  display:flex;align-items:center;gap:10px;
+  cursor:pointer;user-select:none;
+  transition:border-color .2s;
+}
+.ac-h.open{
+  border-radius:8px 8px 0 0;
+  border-bottom-color:transparent;
+  border-color:var(--line);
+}
+.ac-icon{font-size:16px;flex-shrink:0;opacity:.8}
+.ac-title{
+  font-size:13px;font-weight:700;
+  color:var(--off-white);flex:1;
+  line-height:1.4;
+}
+.ac-tag{
+  font-size:9px;font-weight:700;
+  padding:2px 7px;border-radius:2px;
+  white-space:nowrap;flex-shrink:0;
+  letter-spacing:.06em;
+}
+.tag-key{background:rgba(168,35,42,.2);color:var(--crimson-l);border:1px solid rgba(168,35,42,.3)}
+.tag-imp{background:rgba(201,168,76,.12);color:var(--gold);border:1px solid rgba(201,168,76,.25)}
+.tag-base{background:rgba(91,143,212,.12);color:#9DC0E8;border:1px solid rgba(91,143,212,.25)}
+.ac-arr{
+  color:var(--muted);font-size:10px;
+  transition:transform .2s;flex-shrink:0;
+}
+.ac-h.open .ac-arr{transform:rotate(180deg)}
+.ac-b{
+  display:none;
+  background:var(--navy-2);
+  border:1px solid var(--line);
+  border-top:none;
+  border-radius:0 0 8px 8px;
+  padding:12px 15px 14px;
+}
+.ac-b.open{display:block}
+.ac-b p,.ac-b li{
+  font-size:12.5px;
+  color:rgba(240,238,232,.7);
+  line-height:1.8;
+}
+.ac-b ul{padding-left:1.1rem;margin-top:5px}
+.ac-b li{margin-bottom:5px}
+
+/* STEP LIST */
+.sl{list-style:none;padding:0}
+.si{
+  display:flex;gap:10px;align-items:flex-start;
+  padding:10px 0;
+  border-bottom:1px solid var(--line2);
+}
+.si:last-child{border-bottom:none}
+.sn{
+  width:24px;height:24px;border-radius:50%;
+  background:rgba(201,168,76,.15);
+  border:1px solid var(--gold-dim);
+  color:var(--gold);
+  font-size:10px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-top:1px;
+}
+.sb{flex:1}
+.st{
+  font-size:13px;font-weight:700;
+  color:var(--off-white);margin-bottom:3px;
+}
+.sd{font-size:12px;color:rgba(240,238,232,.6);line-height:1.7}
+
+/* INLINE BOXES */
+.pt-box{
+  background:rgba(212,145,58,.08);
+  border:1px solid rgba(212,145,58,.2);
+  border-radius:7px;padding:9px 11px;
+  margin-top:10px;font-size:12px;
+  color:#E8B870;line-height:1.65;
+  display:flex;gap:6px;
+}
+.pt-box::before{content:'⚠️';flex-shrink:0}
+.sci-box{
+  background:rgba(91,143,212,.08);
+  border:1px solid rgba(91,143,212,.2);
+  border-radius:7px;padding:9px 11px;
+  margin-top:10px;font-size:12px;
+  color:#9DC0E8;line-height:1.65;
+  display:flex;gap:6px;
+}
+.sci-box::before{content:'🔬';flex-shrink:0}
+.cp-box{
+  background:rgba(138,155,190,.07);
+  border:1px solid var(--line2);
+  border-radius:7px;padding:9px 11px;
+  margin-top:10px;font-size:12px;
+  color:var(--muted);line-height:1.65;
+  display:flex;gap:6px;
+}
+.cp-box::before{content:'📌';flex-shrink:0}
+.gate-box{
+  background:rgba(168,35,42,.1);
+  border:1px solid rgba(168,35,42,.3);
+  border-radius:8px;padding:12px 14px;
+  margin:12px 0;font-size:12.5px;
+  color:#F4A0A5;line-height:1.7;
+  display:flex;gap:8px;
+}
+.gate-box::before{content:'🚧';flex-shrink:0;font-size:15px}
+.star-box{
+  background:rgba(201,168,76,.07);
+  border:1px solid rgba(201,168,76,.2);
+  border-radius:8px;padding:12px 14px;
+  margin:12px 0;font-size:12.5px;
+  color:var(--gold-l);line-height:1.7;
+  display:flex;gap:8px;
+}
+.star-box::before{content:'⭐';flex-shrink:0;font-size:15px}
+
+/* SPIKE */
+.spike-card{
+  background:var(--navy-2);
+  border:1px solid var(--line2);
+  border-radius:10px;
+  margin-bottom:8px;overflow:hidden;
+}
+.sc-h{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 14px;cursor:pointer;user-select:none;
+}
+.sc-h.open{border-bottom:1px solid var(--line2)}
+.sc-arr{color:var(--muted);font-size:10px;transition:transform .2s;flex-shrink:0}
+.sc-h.open .sc-arr{transform:rotate(180deg)}
+.sc-b{display:none;padding:12px 14px 14px}
+.sc-b.open{display:block}
+.sc-b p,.sc-b li{font-size:12.5px;color:rgba(240,238,232,.65);line-height:1.8}
+.sc-b ul{padding-left:1.1rem;margin-top:5px}
+.sc-b li{margin-bottom:5px}
+
+.angle-row{display:flex;gap:8px;margin-top:10px}
+.angle-box{
+  flex:1;
+  background:rgba(201,168,76,.07);
+  border:1px solid var(--line);
+  border-radius:7px;
+  padding:10px;text-align:center;
+}
+.angle-val{font-size:20px;font-weight:300;color:var(--gold-l)}
+.angle-lbl{font-size:9px;color:var(--muted);margin-top:3px;letter-spacing:.04em}
+
+/* PHASE NAV */
+.phase-nav{
+  display:flex;margin-bottom:12px;
+  overflow-x:auto;
+  background:var(--navy-2);
+  border:1px solid var(--line2);
+  border-radius:8px;
+  scrollbar-width:none;
+}
+.phase-nav::-webkit-scrollbar{display:none}
+.phase-btn{
+  flex:1;min-width:60px;
+  display:flex;flex-direction:column;
+  align-items:center;gap:3px;
+  padding:10px 4px;
+  cursor:pointer;border:none;background:transparent;
+  font-family:'Noto Sans JP',sans-serif;
+  color:var(--muted);
+  border-bottom:2px solid transparent;
+  transition:all .18s;
+}
+.phase-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+.phase-btn .pi{font-size:17px;line-height:1}
+.phase-btn .pl{font-size:8.5px;font-weight:700;letter-spacing:.04em;white-space:nowrap}
+.spike-phase{display:none}.spike-phase.active{display:block}
+
+/* FLOW STEPS */
+.flow-steps{display:flex;flex-direction:column;gap:0;margin:10px 0}
+.flow-step{
+  display:flex;align-items:flex-start;gap:12px;
+  position:relative;padding-bottom:16px;
+}
+.flow-step:last-child{padding-bottom:0}
+.flow-step::before{
+  content:'';position:absolute;
+  left:11px;top:24px;bottom:0;width:1px;
+  background:var(--line);
+}
+.flow-step:last-child::before{display:none}
+.flow-dot{
+  width:24px;height:24px;border-radius:50%;
+  background:rgba(201,168,76,.12);
+  border:1px solid var(--gold-dim);
+  color:var(--gold);font-size:10px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;position:relative;z-index:1;
+}
+.flow-body{flex:1;padding-top:2px}
+.flow-title{font-size:13px;font-weight:700;color:var(--off-white);margin-bottom:3px}
+.flow-desc{font-size:12px;color:rgba(240,238,232,.6);line-height:1.7}
+
+/* PLAYER BUTTONS */
+.pbtn-wrap{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.pbtn{
+  padding:7px 14px;
+  cursor:pointer;font-size:11.5px;font-weight:700;
+  letter-spacing:.03em;
+  border:1px solid var(--line2);
+  font-family:'Noto Sans JP',sans-serif;
+  border-radius:3px;background:transparent;
+  color:var(--muted);transition:all .18s;
+}
+.pbtn.active{
+  background:rgba(201,168,76,.12);
+  color:var(--gold-l);
+  border-color:var(--gold-dim);
+}
+
+/* ══════════════════════════
+   COACH NOTE PAGE
+══════════════════════════ */
+.cn-card{
+  background:var(--navy-2);
+  border:1px solid var(--line2);
+  border-radius:12px;
+  padding:16px;margin-bottom:10px;
+}
+.cn-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.cn-ico{
+  width:36px;height:36px;border-radius:50%;
+  border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+  background:rgba(201,168,76,.07);
+}
+.cn-title{
+  font-family:'Noto Serif JP',serif;
+  font-size:14px;font-weight:700;
+  color:var(--off-white);
+  letter-spacing:.04em;
+}
+.cn-body{font-size:12.5px;color:rgba(240,238,232,.65);line-height:1.8}
+.cn-body li{margin-bottom:6px}
+.cn-body ul{padding-left:1.1rem}
+.cn-body strong{color:var(--off-white);font-weight:700}
+
+.memo-item{
+  background:var(--navy-2);
+  border:1px solid var(--line2);
+  border-radius:10px;
+  padding:13px 15px;margin-bottom:8px;
+  display:flex;gap:12px;align-items:flex-start;
+}
+.memo-num{
+  width:24px;height:24px;border-radius:50%;
+  background:rgba(201,168,76,.1);
+  border:1px solid var(--gold-dim);
+  color:var(--gold);font-size:10px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-top:1px;
+}
+.memo-body{flex:1}
+.memo-title{font-size:13px;font-weight:700;color:var(--off-white);margin-bottom:4px}
+.memo-desc{font-size:12px;color:rgba(240,238,232,.6);line-height:1.7}
+
+.menu-tab{display:none}.menu-tab.active{display:block}
+.menu-theme-ph{background:linear-gradient(90deg,rgba(201,168,76,.2) 0%,transparent 100%);border-left-color:var(--gold)}
+.menu-theme-mi{border:1px solid rgba(201,168,76,.25);background:rgba(201,168,76,.05)}
+/* ── DIVIDER ── */
+.dv{border:none;border-top:1px solid var(--line2);margin:16px 0}
+
+/* ── SECTION STATES ── */
+.coach-sec{display:none}.coach-sec.active{display:block}
+.cat-sec{display:none}.cat-sec.active{display:block}
+.player-sec{display:none}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-inner">
+    <div class="hdr-logo">🏐</div>
+    <div style="flex:1">
+      <div class="hdr-title">早稲田大阪高校 バレー部
+        <span class="hdr-sub">WASEDA OSAKA VOLLEYBALL</span>
+      </div>
+    </div>
+    <div class="hdr-badge">2025–26</div>
+  </div>
+</header>
+
+<!-- BOTTOM NAV -->
+<nav class="bnav">
+  <button class="nb active" onclick="showPage('goal',this)"><span class="ni">🎯</span><span class="nl">目標</span></button>
+  <button class="nb" onclick="showPage('members',this)"><span class="ni">👥</span><span class="nl">メンバー</span></button>
+  <button class="nb" onclick="showPage('menu',this)"><span class="ni">📋</span><span class="nl">練習</span></button>
+  <button class="nb" onclick="showPage('coaching',this)"><span class="ni">📐</span><span class="nl">技術</span></button>
+  <button class="nb" onclick="showPage('coachnote',this)"><span class="ni">📓</span><span class="nl">ノート</span></button>
+</nav>
+
+<!-- ══════ 目標 ══════ -->
+<div id="page-goal" class="page active">
+  <div class="team-motto">
+    <div class="team-motto-en">TEAM GOAL</div>
+    <div class="team-motto-ja">大阪府 2部昇格</div>
+    <div class="team-motto-sub">守備 × スピード × チーム一丸</div>
+  </div>
+
+  <div class="ey">COUNTDOWN</div>
+  <div class="cd-row" id="cd-container"></div>
+
+  <div class="ey">NEXT MATCHES</div>
+  <div class="goal-card gc-near">
+    <div class="goal-date">📅 2026 / 07 / 19（日）</div>
+    <div class="goal-title">豊中高校 練習試合</div>
+    <div class="goal-body">基本技術の習得を目指す。レセプション・ディグ・スパイクの3技術を試合で使えるレベルに引き上げる。</div>
+    <div class="goal-tags"><span class="bdg b-ok">レセプション</span><span class="bdg b-ok">ディグ</span><span class="bdg b-gold">スパイク</span></div>
+  </div>
+  <div class="goal-card gc-mid">
+    <div class="goal-date">📅 2026 / 07 / 25（土）</div>
+    <div class="goal-title">大阪総体</div>
+    <div class="goal-body">公式戦。練習試合で積み上げた技術を本番の緊張感の中で発揮する。ミスを恐れず、チームスタイルを貫く。</div>
+    <div class="goal-tags"><span class="bdg b-crim">公式戦</span><span class="bdg b-gold">全力発揮</span><span class="bdg b-info">チームスタイル</span></div>
+  </div>
+  <div class="goal-card gc-far">
+    <div class="goal-date">📅 2026 / 07 / 31（金）</div>
+    <div class="goal-title">茨木市長杯</div>
+    <div class="goal-body">チーム戦術の習得。ディフェンス安定＋スピード（速攻）のスタイルを試合で体現する。</div>
+    <div class="goal-tags"><span class="bdg b-info">ディフェンス</span><span class="bdg b-info">速攻A/B/C</span><span class="bdg b-info">Bクイック</span></div>
+  </div>
+
+  <div class="ey">MINDSET</div>
+  <div class="mindset-card"><div class="ms-ico">🧠</div><div><div class="ms-title">考えて練習に取り組もう</div><div class="ms-body">練習前に「今日の自分の課題」と「今日取り組むこと」を必ずイメージしてから体育館に入る。目的を持って動くことで、成長の速さが全然違う。</div></div></div>
+  <div class="mindset-card"><div class="ms-ico">⏱️</div><div><div class="ms-title">限られた時間を最大限に活かす</div><div class="ms-body">練習時間は短い。体育館に入ったら無駄な動きをなくし、ボールに触る回数を1回でも増やすことを意識する。準備は練習前に済ませておく。</div></div></div>
+  <div class="mindset-card"><div class="ms-ico">🏠</div><div><div class="ms-title">個々の準備を大切にしよう</div><div class="ms-body">自主練・逆立ち・動画学習など、一人でできることはたくさんある。チームでの練習を最大化するために、個人の準備が土台になる。</div></div></div>
+
+  <div class="ey">TEAM STYLE</div>
+  <div class="style-card">
+    <div class="style-label">PLAYING PHILOSOPHY</div>
+    <div class="style-title">🛡️ 守備の意識 × 速い攻撃</div>
+    <div style="font-size:13px;color:rgba(240,238,232,.65);line-height:1.8;margin-bottom:10px">身体能力差は戦術でカバーできる。拾って拾って速攻で崩す。これがこのチームのスタイル。</div>
+    <div><span class="bdg b-ok">レセプション安定</span><span class="bdg b-ok">ディグ徹底</span><span class="bdg b-info">速攻</span><span class="bdg b-gold">フライング文化</span></div>
+  </div>
+  <div class="rule-box"><strong>練習中の鉄則：</strong>気になったことはその場で練習を止めてチーム全員に共有する。間違ったフォームで反復練習しても成長にはつながらない。正しい動きを確認してから再開する。</div>
+</div>
+
+<!-- ══════ メンバー ══════ -->
+<div id="page-members" class="page">
+  <div class="hb hb-info" style="margin-top:2px"><strong>タップすると個人プロフィール・個人課題を確認できます。</strong></div>
+  <div class="ey">2ND YEAR</div>
+  <div class="mg">
+    <div class="mc cap" onclick="openModal('haruto')"><div class="mn">ムラカミ ハルト</div><span class="bdg b-gold">レフト</span><div class="mnote">🏆 キャプテン</div></div>
+    <div class="mc vcap" onclick="openModal('kairi')"><div class="mn">キシタニ カイリ</div><span class="bdg b-gold">レフト/ライト</span><div class="mnote">🥈 副キャプテン</div></div>
+    <div class="mc vcap" onclick="openModal('chihiro')"><div class="mn">タダ チヒロ</div><span class="bdg b-info">セッター</span><div class="mnote">🥈 副キャプテン</div></div>
+    <div class="mc" onclick="openModal('soma')"><div class="mn">サイトウ ソウマ</div><span class="bdg b-info">セッター</span></div>
+    <div class="mc" onclick="openModal('seishiro')"><div class="mn">ナカヤマ セイシロウ</div><span class="bdg b-muted">センター</span></div>
+    <div class="mc" onclick="openModal('yura')"><div class="mn">ニシザワ ユラ</div><span class="bdg b-muted">センター</span></div>
+    <div class="mc" onclick="openModal('kanata')"><div class="mn">ミナミグチ カナタ</div><span class="bdg b-ok">ライト</span></div>
+    <div class="mc" onclick="openModal('ryosuke_o')"><div class="mn">オオシマ ジョウスケ</div><span class="bdg b-gold">レフト/ライト</span></div>
+    <div class="mc" onclick="openModal('riku')"><div class="mn">ハラダ リク</div><span class="bdg b-warn">リベロ</span><div class="mnote">⚾ 野球経験者</div></div>
+  </div>
+  <div class="ey">1ST YEAR</div>
+  <div class="mg">
+    <div class="mc" onclick="openModal('kouki')"><div class="mn">イチハラ コウキ</div><span class="bdg b-muted">未定</span></div>
+    <div class="mc exp" onclick="openModal('sota')"><div class="mn">クリバヤシ ソウタ</div><span class="bdg b-ok">経験者</span></div>
+    <div class="mc" onclick="openModal('keigo')"><div class="mn">キムラ ケイゴ</div><span class="bdg b-muted">未定</span></div>
+    <div class="mc" onclick="openModal('mao')"><div class="mn">クロダ マオ</div><span class="bdg b-muted">未定</span></div>
+    <div class="mc exp" onclick="openModal('kaito')"><div class="mn">ヒラサワ カイト</div><span class="bdg b-ok">経験者</span></div>
+    <div class="mc pot" onclick="openModal('ryosuke_f')"><div class="mn">フクモト リョウスケ</div><span class="bdg b-muted">センター</span></div>
+    <div class="mc exp" onclick="openModal('haruta')"><div class="mn">マツモト ハルタ</div><span class="bdg b-ok">レフト</span><div class="mnote">兄：東山高校</div></div>
+    <div class="mc exp" onclick="openModal('takuto')"><div class="mn">ヤマナ タクト</div><span class="bdg b-ok">経験者</span></div>
+    <div class="mc" onclick="openModal('kosuke')"><div class="mn">ヨシダ コウスケ</div><span class="bdg b-muted">未定</span></div>
+    <div class="mc" onclick="openModal('takeru')"><div class="mn">トミヤマ タケル</div><span class="bdg b-muted">センター</span></div>
+  </div>
+  <div class="ey">MANAGER</div>
+  <div class="mg">
+    <div class="mc"><div class="mn">タカクラ ルイ</div><div class="mnote">2年・マネージャー</div></div>
+    <div class="mc"><div class="mn">ハシグチ リコ</div><div class="mnote">2年・マネージャー</div></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="playerModal" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-name" id="modal-name"></div>
+    <div class="modal-meta" id="modal-meta"></div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<!-- ══════ 練習メニュー ══════ -->
+<div id="page-menu" class="page">
+
+  <div class="stab-wrap" style="margin-top:2px">
+    <button class="stab active" onclick="showMenu('menu-flow',this)">🔄 基本の流れ</button>
+    <button class="stab" onclick="showMenu('menu-new',this)">✨ 新しい練習</button>
+    <button class="stab" onclick="showMenu('menu-home',this)">🏠 自主練・動画</button>
+  </div>
+
+  <div class="hb hb-info" style="font-size:12px">
+    <strong>📋 注記：</strong>ミーティングと振り返りは体育館時間外に実施。下記は体育館内の練習時間のみ。
+  </div>
+
+  <!-- ── タブ1：基本の練習の流れ ── -->
+  <div id="menu-flow" class="menu-tab active">
+    <div class="hb hb-gold"><strong>すべてのメニューに意味がある。</strong>「なぜこの練習をするのか」わからなければ、その場でコーチに聞くこと。理解して取り組む練習は効果が何倍にもなる。</div>
+
+    <div class="ey">基本の練習の流れ（全14ステップ）</div>
+    <div class="mi"><div class="mi-h"><span class="mi-n">① ウォームアップ</span></div><div class="mi-d">全身を動かして体温を上げる。ケガ予防と動きの準備。</div></div>
+    <div class="mi"><div class="mi-h"><span class="mi-n">② 逆立ち</span></div><div class="mi-d">壁倒立10〜30秒×2〜3セット。スパイクの肩の安定・体幹のブレ防止・フライングの恐怖心低減。</div></div>
+    <div class="mi"><div class="mi-h"><span class="mi-n">③ フライング</span><span class="mi-t">新練習</span></div><div class="mi-d">マットを使い、低い姿勢・恐怖心ゼロから段階的に。詳細は「新しい練習」タブへ。</div></div>
+    <div class="mi"><div class="mi-h"><span class="mi-n">④ 対人</span></div><div class="mi-d">正確性の練習。アンダー・オーバー・ミートの基礎＋スプリットステップ。</div><div class="mi-w">対人で正確に打てない選手はフォームが確立できていない。まずここで固める</div></div>
+    <div class="mi"><div class="mi-h"><span class="mi-n">⑤ 3メン</span><span class="mi-t">新練習</span></div><div class="mi-d">ポジショニング＋下がる意識／レッグスキル／目線を同時に鍛える総合ドリル。毎回の練習に組み込む。</div></div>
+    <div class="mi"><div class="mi-h"><span class="mi-n">⑥ セッター練習</span></div><div class="mi-d">セッター陣の専門練習。右目基準・足の運び・トスの安定。</div></div>
+    <div class="mi"><div class="mi-h"><span class="mi-n">⑦ レセプション</span></div><div class="mi-d">アタック台2台を使用。1人3〜5球で交代し回転率を上げる。</div><div class="mi-w">「足が先、手は後」。落下点に入るのが最優先</div></div>
+    <div class="mi"><div class="mi-h"><span class="mi-n">⑧ ディグ＆二段トス＆スパイク</span></div><div class="mi-d">乱れたボールをつなぎ、二段トスからスパイクまで完結させる連続ドリル。試合で最も多いシーンの再現。</div></div>
+    <div class="mi"><div class="mi-h"><span class="mi-n">⑨ 手上げスパイク（フォームチェック）</span></div><div class="mi-d">タブレットで動画撮影→その場でスロー再生確認。撮影→即修正が最速の上達法。</div></div>
+    <div class="mi"><div class="mi-h"><span class="mi-n">⑩ コンビ</span></div><div class="mi-d">セッターとの連携・タイミング合わせ。クイック・平行攻撃の反復。</div></div>
+    <div class="mi"><div class="mi-h"><span class="mi-n">⑪ サーブ</span></div><div class="mi-d">トスを丁寧に。<strong>適当に打たない。毎回狙いを決める。</strong></div><div class="mi-w">サーブは唯一、相手の影響を受けない技術。自分のペースで打てる</div></div>
+    <div class="mi"><div class="mi-h"><span class="mi-n">⑫ 6レシ</span></div><div class="mi-d">アタック台からのスパイクをレシーブし、スパイクで返すまで。守備→つなぎ→攻撃の一連の流れ。</div></div>
+    <div class="mi"><div class="mi-h"><span class="mi-n">⑬ 試合形式</span></div><div class="mi-d">ボールが落ちたら同じ場所に3球繰り返し→ローテーション。弱点をその場で潰す。</div></div>
+    <div class="mi"><div class="mi-h"><span class="mi-n">⑭ ゲーム形式</span></div><div class="mi-d">実戦。練習でやったことを試合で出す回路を作る。</div></div>
+  </div>
+
+  <!-- ── タブ2：新しい練習・道具 ── -->
+  <div id="menu-new" class="menu-tab">
+
+    <div class="ey">新しく追加する練習</div>
+
+    <div class="ac"><div class="ac-h open" onclick="togAc(this)"><span class="ac-icon">🏃</span><span class="ac-title">フライング</span><span class="ac-tag tag-imp">毎回実施</span><span class="ac-arr">▼</span></div>
+    <div class="ac-b open">
+      <div class="hb hb-gold" style="margin-bottom:10px"><strong>守備範囲外のボールに体ごと飛び込む、チームを救う技術。</strong></div>
+      <div class="hb hb-crimson" style="margin-bottom:10px"><strong>ケガの最大原因は「怖くて腕で体を支えること」。</strong>マットを使い、低い姿勢から恐怖心を消すのが最初のステップ。</div>
+      <div class="flow-steps">
+        <div class="flow-step"><div class="flow-dot">1</div><div class="flow-body"><div class="flow-title">膝立ちから倒れる</div><div class="flow-desc">マットの上で、膝立ちの姿勢からゆっくり前に倒れる。胸・腹で滑る感覚を覚える。</div></div></div>
+        <div class="flow-step"><div class="flow-dot">2</div><div class="flow-body"><div class="flow-title">低い姿勢から</div><div class="flow-desc">しゃがんだ低い姿勢から飛び込む。腕で地面を突かないこと。</div></div></div>
+        <div class="flow-step"><div class="flow-dot">3</div><div class="flow-body"><div class="flow-title">足の振り上げ</div><div class="flow-desc">地面をしっかり蹴り、足を振り上げて胸から着地する。</div></div></div>
+        <div class="flow-step"><div class="flow-dot">4</div><div class="flow-body"><div class="flow-title">ボールあり</div><div class="flow-desc">動作が身についてから初めてボールを絡める。届かなくても最後まで飛ぶ。</div></div></div>
+      </div>
+    </div></div>
+
+    <div class="ac"><div class="ac-h open" onclick="togAc(this)"><span class="ac-icon">3️⃣</span><span class="ac-title">3メン</span><span class="ac-tag tag-imp">毎回実施</span><span class="ac-arr">▼</span></div>
+    <div class="ac-b open">
+      <div class="hb hb-gold" style="margin-bottom:10px"><strong>レッグスキルとハンズスキルを同時に鍛える総合ドリル。</strong></div>
+      <div class="flow-steps">
+        <div class="flow-step"><div class="flow-dot">1</div><div class="flow-body"><div class="flow-title">ステップ①：その場に打つ</div><div class="flow-desc">ノッカーは固定位置から打つ。3人はレシーブ→カバーの基本ローテを覚える。</div></div></div>
+        <div class="flow-step"><div class="flow-dot">2</div><div class="flow-body"><div class="flow-title">ステップ②：ノッカーが移動</div><div class="flow-desc">ノッカーが動くことで、3人は常に体の向きを調整し続ける必要が生まれる。</div></div></div>
+        <div class="flow-step"><div class="flow-dot">3</div><div class="flow-body"><div class="flow-title">ステップ③：移動しつつ左右に打つ</div><div class="flow-desc">最も実戦に近い形。レッグスキル・目線・ポジショニングが総合的に鍛えられる。</div></div></div>
+      </div>
+      <div class="gate-box"><div><strong>ノッカーの鉄則：正面に絶対に打たない。</strong>足が動かない練習には意味がない。3人はノッカーに対して移動し、常に視界に入ること。</div></div>
+      <a href="https://www.youtube.com/watch?v=YgkKvZqwT-0" target="_blank" class="video-link" style="margin-top:10px"><div class="vthumb">▶</div><div><div class="vt">3メンの動き方</div><div class="vs">練習前にイメージを作っておこう</div></div></a>
+    </div></div>
+
+    <div class="ey">効率化の道具</div>
+    <div class="mindset-card"><div class="ms-ico">🧱</div><div><div class="ms-title">壁 ― 最良のパートナー</div><div class="ms-body">ちゃんと届けないと、ちゃんと返ってこない。個別反復は壁でやる。アンダー・オーバー・ミートすべてに使える。</div></div></div>
+    <div class="mindset-card"><div class="ms-ico">📱</div><div><div class="ms-title">タブレット ― 撮影→即修正</div><div class="ms-body">フォームはスロー再生で確認。撮影してその場で修正するのが最速の上達法。自分の動きを目で見て理解する。</div></div></div>
+  </div>
+
+  <!-- ── タブ3：自主練・動画 ── -->
+  <div id="menu-home" class="menu-tab">
+    <div class="ey">HOMEWORK / 自主練</div>
+    <div class="card"><ul>
+      <li>🧱 壁打ち：アンダー・オーバー・ミートの個別反復</li>
+      <li>💪 逆立ち（壁倒立）10〜30秒 × 3セット</li>
+      <li>🎯 ジャンプ力イメージトレーニング → 下の参考動画を見てから練習すること</li>
+    </ul></div>
+    <div class="ey">REFERENCE VIDEO</div>
+    <a href="https://www.youtube.com/watch?v=D3QdZ5TBMZY" target="_blank" class="video-link"><div class="vthumb">▶</div><div><div class="vt">ジャンプ力アップのイメージトレーニング</div><div class="vs">トレーニングに取り入れてみよう</div></div></a>
+    <div class="hb hb-muted" style="margin-top:12px;font-size:12px">📍 ポジション別の動画は「技術」ページ内の各ポジションタブに移動しました。3メンの動画は本ページ「新しい練習」タブに掲載しています。</div>
+  </div>
+
+</div>
+
+<div id="page-coaching" class="page">
+  <div class="stab-wrap" style="margin-top:2px">
+    <button class="stab active" onclick="showCoach('basic',this)">📚 基本技術</button>
+    <button class="stab" onclick="showCoach('personal',this)">👤 個別指導</button>
+    <button class="stab" onclick="showCoach('position',this)">📍 ポジション別</button>
+  </div>
+
+  <div id="coach-basic" class="coach-sec active">
+
+    <!-- ピラミッド概要 -->
+    <div class="style-card" style="margin-bottom:14px">
+      <div class="style-label">SKILL PYRAMID</div>
+      <div class="style-title">🔺 技術ピラミッド ― 自分の現在地を知る</div>
+      <div style="font-size:12.5px;color:rgba(240,238,232,.7);line-height:1.9;margin-bottom:10px">「うまくできない」の正体は、「何ができていないか分かっていない」こと。下の段が崩れていると、上の段は絶対に安定しない。出発点は人それぞれ。自分はどこが足りないかをイメージすること。</div>
+      <div style="font-family:monospace;font-size:10.5px;line-height:1.9;color:var(--gold-l);background:var(--navy);border:1px solid var(--line);border-radius:8px;padding:12px 10px;text-align:center">
+        （5）チーム技術<br>
+        （4）試合技術<br>
+        （3）プレー技術<br>
+        （2）基礎技術<br>
+        （1）考え方 ― すべてのベース
+      </div>
+    </div>
+
+    <div class="cat-wrap">
+      <button class="cat-btn active" onclick="showCat('c-p1',this)">🧠 (1)考え方</button>
+      <button class="cat-btn" onclick="showCat('c-p2',this)">🔰 (2)基礎技術</button>
+      <button class="cat-btn" onclick="showCat('c-p3',this)">🏐 (3)プレー技術</button>
+      <button class="cat-btn" onclick="showCat('c-p4',this)">⚔️ (4)試合技術</button>
+      <button class="cat-btn" onclick="showCat('c-p5',this)">🏆 (5)チーム技術</button>
+    </div>
+
+    <!-- ═══ (1) 考え方 ═══ -->
+    <div id="c-p1" class="cat-sec active">
+      <div class="hb hb-gold"><strong>すべてのベース。</strong>同じフォーム練習でも、これを理解しているかどうかで伸び方が変わる。</div>
+
+      <div class="ac"><div class="ac-h open" onclick="togAc(this)"><span class="ac-icon">⛓️</span><span class="ac-title">① 運動連鎖</span><span class="ac-tag tag-key">最重要</span><span class="ac-arr">▼</span></div>
+      <div class="ac-b open">
+        <ul class="sl">
+          <li class="si"><div class="sn">1</div><div class="sb"><div class="st">力は 足 → 腰 → 肩 → 腕 の順に伝わる</div><div class="sd">腕だけ・手だけでは力は出ない。どのスポーツも同じ（野球のスイングも足から）。</div></div></li>
+        </ul>
+      </div></div>
+
+      <div class="ac"><div class="ac-h open" onclick="togAc(this)"><span class="ac-icon">🦵</span><span class="ac-title">② レッグスキル ＆ ハンズスキル</span><span class="ac-tag tag-key">最重要</span><span class="ac-arr">▼</span></div>
+      <div class="ac-b open">
+        <div class="hb hb-crimson" style="margin-bottom:10px"><strong>順番は絶対に「レッグ → ハンズ」。</strong>レシーブが上がらない根本原因は「手の形」ではなく「落下点に入るのが遅いこと」。</div>
+        <ul class="sl">
+          <li class="si"><div class="sn">L</div><div class="sb"><div class="st">レッグスキル＝落下点に最速・最短で入る足の技術</div><div class="sd">レシーブ上達の根っこ。</div></div></li>
+          <li class="si"><div class="sn">H</div><div class="sb"><div class="st">ハンズスキル＝入った落下点から目標へ正確に運ぶ手の技術</div><div class="sd">足が間に合っていなければ、どんなに手がうまくてもコントロールできない。</div></div></li>
+        </ul>
+        <div class="ey" style="margin-top:12px">レッグスキルの5ステップ</div>
+        <div class="flow-steps">
+          <div class="flow-step"><div class="flow-dot">1</div><div class="flow-body"><div class="flow-title">相手の挙動を読む</div></div></div>
+          <div class="flow-step"><div class="flow-dot">2</div><div class="flow-body"><div class="flow-title">落下点を予測する</div></div></div>
+          <div class="flow-step"><div class="flow-dot">3</div><div class="flow-body"><div class="flow-title">迷いのない1歩目</div></div></div>
+          <div class="flow-step"><div class="flow-dot">4</div><div class="flow-body"><div class="flow-title">落下点に最速で入る</div><div class="flow-desc">ボールがネットを越える頃には軸足が入っているのが理想。</div></div></div>
+          <div class="flow-step"><div class="flow-dot">5</div><div class="flow-body"><div class="flow-title">体をアジャストして正面で捕らえる</div></div></div>
+        </div>
+      </div></div>
+
+      <div class="ac"><div class="ac-h" onclick="togAc(this)"><span class="ac-icon">💥</span><span class="ac-title">③ 力のタイミング</span><span class="ac-arr">▼</span></div>
+      <div class="ac-b">
+        <ul class="sl">
+          <li class="si"><div class="sn">1</div><div class="sb"><div class="st">基本は脱力。力を入れるのはインパクトの瞬間だけ</div><div class="sd">ずっと力むとスイングは遅くなり、ボールに伝わる力は小さくなる。</div></div></li>
+          <li class="si"><div class="sn">2</div><div class="sb"><div class="st">「脱力 ──→ 爆発（当たる瞬間）」</div><div class="sd">このオン・オフの切り替えが鋭いほど、技術の精度とパワーが上がる。</div></div></li>
+        </ul>
+        <div class="sci-box">緊張すると無意識に力が入る。試合でもこの原則を守れることが技術の安定につながる。</div>
+      </div></div>
+
+      <div class="ac"><div class="ac-h" onclick="togAc(this)"><span class="ac-icon">👁️</span><span class="ac-title">④ 目線</span><span class="ac-arr">▼</span></div>
+      <div class="ac-b">
+        <ul class="sl">
+          <li class="si"><div class="sn">1</div><div class="sb"><div class="st">頭を振らない・上下させない</div><div class="sd">頭が動くとボールとの距離感が狂う。ボールは目で追う（野球のバッターと同じ）。</div></div></li>
+          <li class="si"><div class="sn">2</div><div class="sb"><div class="st">「目線を切る」技術</div><div class="sd">ボールを見る → 目標（セッター）を見る → ボールを見直す。これができると感覚頼みのレシーブから卒業できる。</div></div></li>
+        </ul>
+      </div></div>
+    </div>
+
+    <!-- ═══ (2) 基礎技術 ═══ -->
+    <div id="c-p2" class="cat-sec">
+      <div class="hb hb-gold"><strong>正しいフォームを体に覚えさせる段階。</strong>間違ったまま反復しても意味がない。ゆっくり、イメージしながら。</div>
+
+      <div class="ac"><div class="ac-h open" onclick="togAc(this)"><span class="ac-icon">🧍</span><span class="ac-title">⑤ 基本姿勢</span><span class="ac-arr">▼</span></div>
+      <div class="ac-b open">
+        <ul class="sl">
+          <li class="si"><div class="sn">1</div><div class="sb"><div class="st">足幅は肩幅より少し広め</div><div class="sd">膝を軽く曲げ重心はやや前。つま先体重（かかとを少し浮かす）。</div></div></li>
+          <li class="si"><div class="sn">2</div><div class="sb"><div class="st">目的：どの方向にも最速で1歩目を出せる「待機状態」</div></div></li>
+        </ul>
+      </div></div>
+
+      <div class="ac"><div class="ac-h" onclick="togAc(this)"><span class="ac-icon">🙌</span><span class="ac-title">⑥ アンダーパス</span><span class="ac-tag tag-key">要注意</span><span class="ac-arr">▼</span></div>
+      <div class="ac-b">
+        <ul class="sl">
+          <li class="si"><div class="sn">1</div><div class="sb"><div class="st">親指を並べて組み、腕の面を平らに。肘は伸ばす</div></div></li>
+          <li class="si"><div class="sn">2</div><div class="sb"><div class="st">腕を振らない。体重移動でボールを送り出す</div><div class="sd">足を前後に開き、後ろ足→前足への体重移動（股関節・骨盤を前に送り出す）で運ぶ。</div></div></li>
+          <li class="si"><div class="sn">3</div><div class="sb"><div class="st">「膝を使う」＝上下運動ではない</div><div class="sd">上下に沈んで上がるだけだと前への力が出ず、結局腕で運んでしまい、ドライブ回転のかかった質の悪いボールになる。</div></div></li>
+        </ul>
+        <div class="gate-box"><div><strong>よくある間違い：</strong>腕で叩く／足を真横に揃えて上下運動する／足を動かさず腕だけで取りに行く</div></div>
+        <div class="star-box"><div><strong>「しんどい姿勢が正しい姿勢」。</strong>腰を低く、それをサボらない。チャンスボールや普通のレセプションは、腕を振らず体重移動だけで十分に返せる。</div></div>
+      </div></div>
+
+      <div class="ac"><div class="ac-h" onclick="togAc(this)"><span class="ac-icon">🖐️</span><span class="ac-title">⑦ オーバーパス</span><span class="ac-arr">▼</span></div>
+      <div class="ac-b">
+        <ul class="sl">
+          <li class="si"><div class="sn">1</div><div class="sb"><div class="st">親指と人差し指で三角形。額の前 約10cm で受ける</div></div></li>
+          <li class="si"><div class="sn">2</div><div class="sb"><div class="st">足でボールの下に入ってから。手だけで処理しない</div></div></li>
+          <li class="si"><div class="sn">3</div><div class="sb"><div class="st">前に飛ばすときは前後の体重移動で運ぶ</div><div class="sd">アンダーと同じ。手先だけで飛ばさない。</div></div></li>
+          <li class="si"><div class="sn">4</div><div class="sb"><div class="st">毎回同じ形で受けることが安定の条件</div></div></li>
+        </ul>
+      </div></div>
+
+      <div class="ac"><div class="ac-h" onclick="togAc(this)"><span class="ac-icon">🎯</span><span class="ac-title">⑧ ミート</span><span class="ac-arr">▼</span></div>
+      <div class="ac-b">
+        <ul class="sl">
+          <li class="si"><div class="sn">1</div><div class="sb"><div class="st">ゼロポジションを意識</div><div class="sd">肩甲骨・上腕・前腕が一直線。肩への負担が最小、スイングスピードが最大。</div></div></li>
+          <li class="si"><div class="sn">2</div><div class="sb"><div class="st">トスと同時に左肩（腕）を伸ばす → 右手の甲を耳の横、右肩を上げる</div></div></li>
+          <li class="si"><div class="sn">3</div><div class="sb"><div class="st">左腕を平泳ぎのように空間をかいて引き下ろし、体を回す</div></div></li>
+          <li class="si"><div class="sn">4</div><div class="sb"><div class="st">左肩の「下げ幅」＝右肩の「上げ幅」</div><div class="sd">左腕を強く引き下ろした反作用で右肩が上がり、ゼロポジションの高い打点が作られる。</div></div></li>
+          <li class="si"><div class="sn">5</div><div class="sb"><div class="st">手のひら全体で捉え、手首のスナップでドライブ回転</div><div class="sd">フォロースルーまで振り切る。</div></div></li>
+        </ul>
+      </div></div>
+
+      <div class="ac"><div class="ac-h" onclick="togAc(this)"><span class="ac-icon">🎾</span><span class="ac-title">⑨ サーブ（フローター＝基礎）</span><span class="ac-arr">▼</span></div>
+      <div class="ac-b">
+        <ul class="sl">
+          <li class="si"><div class="sn">1</div><div class="sb"><div class="st">トスは利き手の少し前・肩より上へまっすぐ</div></div></li>
+          <li class="si"><div class="sn">2</div><div class="sb"><div class="st">手のひらの付け根でボールの中心を叩く。手首は固定</div><div class="sd">無回転にするため。</div></div></li>
+          <li class="si"><div class="sn">3</div><div class="sb"><div class="st">打ったら腕は止める（振り切らない）</div></div></li>
+          <li class="si"><div class="sn">4</div><div class="sb"><div class="st">9割のコントロール・1割の力感から始める</div></div></li>
+        </ul>
+      </div></div>
+
+      <div class="ac"><div class="ac-h" onclick="togAc(this)"><span class="ac-icon">🏃</span><span class="ac-title">⑩ フライング</span><span class="ac-tag tag-imp">新練習</span><span class="ac-arr">▼</span></div>
+      <div class="ac-b">
+        <div class="hb hb-crimson" style="margin-bottom:10px"><strong>ケガの最大原因は「怖くて腕で体を支えること」。</strong>マットを使い、低い姿勢から恐怖心を消すのが最初のステップ。</div>
+        <ul class="sl">
+          <li class="si"><div class="sn">1</div><div class="sb"><div class="st">順序：膝立ちから倒れる → 低い姿勢から → 足の振り上げ → ボールあり</div></div></li>
+          <li class="si"><div class="sn">2</div><div class="sb"><div class="st">着地は胸・腹で滑る。腕で地面を突かない</div></div></li>
+        </ul>
+        <div class="cp-box">練習メニュー「新しい練習」タブに段階別の詳細あり。逆立ちの継続が床への恐怖心を消す最速の方法。</div>
+      </div></div>
+    </div>
+
+    <!-- ═══ (3) プレー技術 ═══ -->
+    <div id="c-p3" class="cat-sec">
+      <div class="hb hb-gold"><strong>基礎技術を実戦で使う段階。</strong>予測・判断・準備の質がプレーの質を決める。</div>
+
+      <div class="ac"><div class="ac-h open" onclick="togAc(this)"><span class="ac-icon">📡</span><span class="ac-title">⑪ レセプション</span><span class="ac-arr">▼</span></div>
+      <div class="ac-b open">
+        <ul class="sl">
+          <li class="si"><div class="sn">1</div><div class="sb"><div class="st">Aパス率が攻撃力を直接決める</div></div></li>
+          <li class="si"><div class="sn">2</div><div class="sb"><div class="st">サーブが打たれた瞬間にスプリットステップ → 落下点へ → 足が着いてから腕を出す</div></div></li>
+          <li class="si"><div class="sn">3</div><div class="sb"><div class="st">面の角度でコントロール</div><div class="sd">迎えに行かない、腰を引かない。</div></div></li>
+          <li class="si"><div class="sn">4</div><div class="sb"><div class="st">自分の得意側（右・左）を知っておく</div></div></li>
+        </ul>
+      </div></div>
+
+      <div class="ac"><div class="ac-h" onclick="togAc(this)"><span class="ac-icon">🦵</span><span class="ac-title">⑫ ディグ</span><span class="ac-arr">▼</span></div>
+      <div class="ac-b">
+        <div class="hb hb-info" style="margin-bottom:10px"><strong>レセプションより速い・強い。だから予測と準備の質がすべて。</strong></div>
+        <ul class="sl">
+          <li class="si"><div class="sn">1</div><div class="sb"><div class="st">ブロックが締めたコースを見て、空いたコースに構える</div></div></li>
+          <li class="si"><div class="sn">2</div><div class="sb"><div class="st">相手が打つ瞬間は、どこにいても必ず止まる</div></div></li>
+          <li class="si"><div class="sn">3</div><div class="sb"><div class="st">強打は面で当てるだけでいい</div><div class="sd">ワンハンドでも拾えれば正解。まずつなぐ。</div></div></li>
+        </ul>
+      </div></div>
+
+      <div class="ac"><div class="ac-h" onclick="togAc(this)"><span class="ac-icon">💥</span><span class="ac-title">⑬ スパイク</span><span class="ac-tag tag-key">重点</span><span class="ac-arr">▼</span></div>
+      <div class="ac-b">
+        <div class="hb hb-gold" style="margin-bottom:10px"><strong>「①助走の技術（おこし回転）」と「②打つ技術（ゼロポイントで打つ）」を分けて練習する。</strong></div>
+        <ul class="sl">
+          <li class="si"><div class="sn">1</div><div class="sb"><div class="st">高いジャンプの3条件</div><div class="sd">助走スピード（目安4m/秒）／地面と平行に進む／入射角度45°</div></div></li>
+          <li class="si"><div class="sn">2</div><div class="sb"><div class="st">ボールにかぶる原因は「スタート位置のズレ」</div><div class="sd">うまい選手ほど踏み込み幅が一定。かぶるなら、スタート位置を自分の適正な距離まで下げる。</div></div></li>
+          <li class="si"><div class="sn">3</div><div class="sb"><div class="st">80%の力で打つ練習が上達の近道</div><div class="sd">全力の一発より、コントロールできる80%を反復する方が伸びる。</div></div></li>
+          <li class="si"><div class="sn">4</div><div class="sb"><div class="st">2歩助走を必ず練習する</div><div class="sd">試合の約5割はハイセットからの攻撃。センターはブロックから下がって2歩助走に入る練習。</div></div></li>
+        </ul>
+        <div class="ey" style="margin-top:12px">参考動画</div>
+        <a href="https://www.youtube.com/watch?v=JZ61wyN7R7c" target="_blank" class="video-link"><div class="vthumb">▶</div><div><div class="vt">スパイクフォーム革命・完全解説</div><div class="vs">24ステップメソッド</div></div></a>
+        <div class="hb hb-muted" style="margin-top:8px;font-size:11.5px">📍 日本代表のフォーム動画は「ポジション別 → アウトサイドアタッカー」に掲載しています。</div>
+      </div></div>
+
+      <div class="ac"><div class="ac-h" onclick="togAc(this)"><span class="ac-icon">🧱</span><span class="ac-title">⑭ ブロック</span><span class="ac-arr">▼</span></div>
+      <div class="ac-b">
+        <ul class="sl">
+          <li class="si"><div class="sn">1</div><div class="sb"><div class="st">サイド／クロスステップで移動 → 打点の真下へ</div><div class="sd">スパイカーの踏み切りから少し遅れて跳ぶ。</div></div></li>
+          <li class="si"><div class="sn">2</div><div class="sb"><div class="st">両手をネットの向こうへ</div><div class="sd">手のひらを並べてボールを挟むイメージ。</div></div></li>
+          <li class="si"><div class="sn">3</div><div class="sb"><div class="st">ブロックで終わりじゃない。着地したら即ディグの位置へ</div><div class="sd">抜けたボールから目を離さない。クイックに入ることをあきらめない。</div></div></li>
+        </ul>
+        <div class="hb hb-info" style="margin-top:10px"><strong>参考動画：</strong>ブロック後の動き方は「ポジション別 → センター（ミドルブロッカー）」に掲載しています。</div>
+      </div></div>
+
+      <div class="ac"><div class="ac-h" onclick="togAc(this)"><span class="ac-icon">🎾</span><span class="ac-title">⑮ サーブ（実践）</span><span class="ac-arr">▼</span></div>
+      <div class="ac-b">
+        <div class="hb hb-gold" style="margin-bottom:10px"><strong>サーブは唯一、相手の影響を受けない技術。</strong>自分のペースで打てる。</div>
+        <div class="flow-steps">
+          <div class="flow-step"><div class="flow-dot">1</div><div class="flow-body"><div class="flow-title">第1段階：9割コートに入れる</div></div></div>
+          <div class="flow-step"><div class="flow-dot">2</div><div class="flow-body"><div class="flow-title">第2段階：ゾーンを狙う</div></div></div>
+          <div class="flow-step"><div class="flow-dot">3</div><div class="flow-body"><div class="flow-title">第3段階：レシーバーの弱点を狙う</div></div></div>
+          <div class="flow-step"><div class="flow-dot">4</div><div class="flow-body"><div class="flow-title">第4段階：ジャンプフローター</div></div></div>
+        </div>
+        <div class="star-box"><div><strong>強打よりコントロール。適当に打たない。毎回狙いを決める。</strong></div></div>
+      </div></div>
+    </div>
+
+    <!-- ═══ (4) 試合技術 ═══ -->
+    <div id="c-p4" class="cat-sec">
+      <div class="hb hb-gold"><strong>個人技術をチームの動きにつなげる段階。</strong>約束事の共有がすべての土台。</div>
+
+      <div class="ac"><div class="ac-h open" onclick="togAc(this)"><span class="ac-icon">📍</span><span class="ac-title">⑯ ポジショニング（守備配置）</span><span class="ac-arr">▼</span></div>
+      <div class="ac-b open">
+        <ul class="sl">
+          <li class="si"><div class="sn">1</div><div class="sb"><div class="st">状況ごとの守備位置と、各ポジションの決まり事をチームで共有する</div></div></li>
+          <li class="si"><div class="sn">2</div><div class="sb"><div class="st">ブロック裏のポテンと落ちるボールは「誰が」「どう」対応するかを決めておく</div></div></li>
+        </ul>
+      </div></div>
+
+      <div class="ac"><div class="ac-h" onclick="togAc(this)"><span class="ac-icon">🤝</span><span class="ac-title">⑰ コンビネーション</span><span class="ac-arr">▼</span></div>
+      <div class="ac-b">
+        <ul class="sl">
+          <li class="si"><div class="sn">1</div><div class="sb"><div class="st">複数人が連携して動く技術</div><div class="sd">ブロック後の切り替え、守備陣形の連動。</div></div></li>
+          <li class="si"><div class="sn">2</div><div class="sb"><div class="st">ブロックが締めたコース以外をディガーがカバーする、を全員で共有</div></div></li>
+        </ul>
+      </div></div>
+
+      <div class="ac"><div class="ac-h" onclick="togAc(this)"><span class="ac-icon">🆙</span><span class="ac-title">⑱ ハイセット（二段トス）</span><span class="ac-tag tag-imp">試合頻出</span><span class="ac-arr">▼</span></div>
+      <div class="ac-b">
+        <div class="hb hb-info" style="margin-bottom:10px"><strong>レセプションやディグが乱れて、セッター以外がトスを上げる場面の技術。試合では非常に多い。</strong></div>
+        <ul class="sl">
+          <li class="si"><div class="sn">1</div><div class="sb"><div class="st">原則：高く・ネットから離して（50cm〜1m）・レフト（アンテナ方向）へ</div></div></li>
+          <li class="si"><div class="sn">2</div><div class="sb"><div class="st">上げる人は目標に体を正対させる</div><div class="sd">オーバーでもアンダーでもOK。迷ったら「高く」。</div></div></li>
+          <li class="si"><div class="sn">3</div><div class="sb"><div class="st">必ず声で呼ぶ（誰が上げるかを明確に）</div></div></li>
+          <li class="si"><div class="sn">4</div><div class="sb"><div class="st">スパイカーは「二段が来る」と判断したら助走位置を変える</div><div class="sd">2歩助走・80%で確実に打つ。</div></div></li>
+        </ul>
+      </div></div>
+    </div>
+
+    <!-- ═══ (5) チーム技術 ═══ -->
+    <div id="c-p5" class="cat-sec">
+      <div class="hb hb-gold"><strong>うちの戦い方。</strong>全員が同じ絵を頭に描いてコートに立つ。</div>
+
+      <div class="ac"><div class="ac-h open" onclick="togAc(this)"><span class="ac-icon">🛡️</span><span class="ac-title">⑲ 戦略：「ディフェンス ＆ スピード」</span><span class="ac-tag tag-key">チームの核</span><span class="ac-arr">▼</span></div>
+      <div class="ac-b open">
+        <div class="hb hb-crimson" style="margin-bottom:10px"><strong>目標：「25点中、相手のミスで15点を粘り取る」</strong></div>
+        <ul class="sl">
+          <li class="si"><div class="sn">1</div><div class="sb"><div class="st">守備を徹底し、自滅しないチームになる</div><div class="sd">初心者の多いチームがスパイクで打ち勝つのは難しい。だから守備で勝つ。</div></div></li>
+          <li class="si"><div class="sn">2</div><div class="sb"><div class="st">高さ勝負を避け、ネット幅9mをフルに使う</div><div class="sd">スピード攻撃で相手ブロックの枚数を減らす。</div></div></li>
+        </ul>
+        <div class="ey" style="margin-top:12px">守備が安定すると起きる2つのこと</div>
+        <ul class="sl">
+          <li class="si"><div class="sn">①</div><div class="sb"><div class="st">相手が精神的に消耗する</div><div class="sd">何本打っても返ってくる。</div></div></li>
+          <li class="si"><div class="sn">②</div><div class="sb"><div class="st">攻撃のチャンスが増える</div><div class="sd">セッターへの返球が増え、コンビが使える。</div></div></li>
+        </ul>
+      </div></div>
+
+      <div class="ac"><div class="ac-h open" onclick="togAc(this)"><span class="ac-icon">📜</span><span class="ac-title">⑳ 戦術：具体的な約束事</span><span class="ac-arr">▼</span></div>
+      <div class="ac-b open">
+        <ul class="sl">
+          <li class="si"><div class="sn">1</div><div class="sb"><div class="st">サーブレシーブは「セッターを動かさない」ことだけを意識</div></div></li>
+          <li class="si"><div class="sn">2</div><div class="sb"><div class="st">ブロックはコース限定、ディグは限定されたコースに集中（連携）</div></div></li>
+          <li class="si"><div class="sn">3</div><div class="sb"><div class="st">レフト＆ライトの平行攻撃。クイックは必ず入る</div><div class="sd">相手に「ある」と思わせることがブロック分散につながる。</div></div></li>
+          <li class="si"><div class="sn">4</div><div class="sb"><div class="st">体勢が崩れたら無理な強打をやめる</div><div class="sd">リバウンド・フェイントを徹底。</div></div></li>
+          <li class="si"><div class="sn">5</div><div class="sb"><div class="st">相手の嫌な場所に落とす</div><div class="sd">セッター定位置・ブロッカーの裏。</div></div></li>
+        </ul>
+      </div></div>
+    </div>
+
+  </div>
+
+  <div id="coach-personal" class="coach-sec">
+    <div class="hb hb-info" style="margin-bottom:12px"><strong>個別指導の方針：</strong>チームの前では全員平等に接する。課題共有は練習の外で行う。</div>
+    <div class="pbtn-wrap" id="pbtn-container"></div>
+    <div id="player-detail-container"></div>
+  </div>
+
+  <!-- ── ポジション別タブ ── -->
+  <div id="coach-position" class="coach-sec">
+    <!-- ポジション選択 -->
+    <div class="cat-wrap">
+      <button class="cat-btn active" onclick="showCat('pos-libero',this)">🛡️ リベロ</button>
+      <button class="cat-btn" onclick="showCat('pos-setter',this)">🎯 セッター</button>
+      <button class="cat-btn" onclick="showCat('pos-oh',this)">💥 アウトサイドアタッカー</button>
+      <button class="cat-btn" onclick="showCat('pos-op',this)">🔥 オポジット</button>
+      <button class="cat-btn" onclick="showCat('pos-mb',this)">🧱 センター（ミドルブロッカー）</button>
+    </div>
+
+    <!-- リベロ -->
+    <div id="pos-libero" class="cat-sec active">
+
+      <!-- なぜリベロ強化が最優先か -->
+      <div class="style-card" style="margin-bottom:14px">
+        <div class="style-label">WHY LIBERO FIRST</div>
+        <div class="style-title">🛡️ リベロの安定がチームを変える</div>
+        <div style="font-size:13px;color:rgba(240,238,232,.7);line-height:1.8;margin-bottom:10px">バレーボールはサーブレシーブの安定がチーム力に直結する。リベロは試合中ずっとコートにいる唯一のポジション。リベロが弱いと相手チームに集中砲火される。逆に安定したリベロは相手の攻撃選択肢を減らす守備的な強さを生む。</div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--gold-dim);margin-bottom:8px">リベロ向き選手の特徴</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <span class="bdg b-ok">足が速く反応が早い</span>
+          <span class="bdg b-ok">低い姿勢が苦にならない</span>
+          <span class="bdg b-ok">粘り強い・ミスを引きずらない</span>
+        </div>
+      </div>
+
+      <!-- コーチメモ：ポジション判断 -->
+      <div class="hb hb-info" style="margin-bottom:12px">
+        <strong>コーチメモ：</strong>リベロは早めにポジションを固定して専門的に鍛える。迷っている場合は上記3点で判断する。「リベロが安定するとチームが変わる」と定期的に言語化して選手に伝える。
+      </div>
+
+      <!-- A：基礎動作ドリル -->
+      <div class="ac">
+        <div class="ac-h open" onclick="togAc(this)">
+          <span class="ac-icon">🏃</span>
+          <span class="ac-title">A｜基礎動作ドリル</span>
+          <span class="ac-tag tag-base">毎回5〜10分</span>
+          <span class="ac-arr">▼</span>
+        </div>
+        <div class="ac-b open">
+          <div class="hb hb-gold" style="margin-bottom:10px"><strong>実施タイミング：</strong>全体ウォームアップの前に、リベロだけ先に単独実施する。</div>
+          <div class="card" style="padding:0;overflow:hidden;margin-bottom:0">
+            <table style="width:100%;border-collapse:collapse;font-size:12px">
+              <thead>
+                <tr style="background:rgba(201,168,76,.1);border-bottom:1px solid var(--line)">
+                  <th style="padding:9px 12px;text-align:left;font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--gold-dim)">ドリル</th>
+                  <th style="padding:9px 12px;text-align:left;font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--gold-dim)">内容・目的</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:1px solid var(--line2)">
+                  <td style="padding:10px 12px;color:var(--off-white);font-weight:700;white-space:nowrap;vertical-align:top">横移動ステップ</td>
+                  <td style="padding:10px 12px;color:rgba(240,238,232,.7)">2〜3歩サイドステップ→低姿勢でボール受け体勢。レッグスキルの土台を作る。</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--line2)">
+                  <td style="padding:10px 12px;color:var(--off-white);font-weight:700;white-space:nowrap;vertical-align:top">後退ステップ</td>
+                  <td style="padding:10px 12px;color:rgba(240,238,232,.7)">前方からボール落下→下がりながらアンダーで処理。深いボールへの対応力を鍛える。</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--line2)">
+                  <td style="padding:10px 12px;color:var(--off-white);font-weight:700;white-space:nowrap;vertical-align:top">片膝ダイブ</td>
+                  <td style="padding:10px 12px;color:rgba(240,238,232,.7)">ゆっくりダイブ→正しい着地フォーム確認。ダイビングの怪我防止と技術習得を同時に。</td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 12px;color:var(--off-white);font-weight:700;white-space:nowrap;vertical-align:top">壁当てアンダー</td>
+                  <td style="padding:10px 12px;color:rgba(240,238,232,.7)">壁に向かって連続アンダーパス。腕の安定・コントロールを高める。</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- B：レセプション強化 -->
+      <div class="ac">
+        <div class="ac-h open" onclick="togAc(this)">
+          <span class="ac-icon">📡</span>
+          <span class="ac-title">B｜レセプション強化</span>
+          <span class="ac-arr">▼</span>
+        </div>
+        <div class="ac-b open">
+          <div class="hb hb-muted" style="margin-bottom:10px">全体のレセプション練習でリベロを列の先頭に固定して回数を多く取る。</div>
+          <ul class="sl">
+            <li class="si"><div class="sn">1</div><div class="sb"><div class="st">弱いサイドに集中して打つ</div><div class="sd">コースをリベロの弱いサイドに意図的に集中して打つことで、苦手コースを克服する。</div></div></li>
+            <li class="si"><div class="sn">2</div><div class="sb"><div class="st">課題は1つだけ与えて繰り返す</div><div class="sd">「足3歩で入れ」などその日の課題を1つだけ与えて徹底的に反復する。</div></div></li>
+            <li class="si"><div class="sn">3</div><div class="sb"><div class="st">全体終了後に2〜3分延長</div><div class="sd">全体終了後、リベロだけ追加でボールを出す。1日の積み上げが大きな差になる。</div></div></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- C：ディグ強化 -->
+      <div class="ac">
+        <div class="ac-h" onclick="togAc(this)">
+          <span class="ac-icon">🦵</span>
+          <span class="ac-title">C｜ディグ強化（アタック台使用）</span>
+          <span class="ac-arr">▼</span>
+        </div>
+        <div class="ac-b">
+          <div class="card" style="padding:0;overflow:hidden;margin-bottom:0">
+            <table style="width:100%;border-collapse:collapse;font-size:12px">
+              <thead>
+                <tr style="background:rgba(201,168,76,.1);border-bottom:1px solid var(--line)">
+                  <th style="padding:9px 12px;text-align:left;font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--gold-dim)">ドリル</th>
+                  <th style="padding:9px 12px;text-align:left;font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--gold-dim)">内容</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:1px solid var(--line2)">
+                  <td style="padding:10px 12px;color:var(--off-white);font-weight:700;white-space:nowrap;vertical-align:top">ライン打ちディグ</td>
+                  <td style="padding:10px 12px;color:rgba(240,238,232,.7)">アタック台からライン際への強打をレシーブ。コースが読めない状況を作る。</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--line2)">
+                  <td style="padding:10px 12px;color:var(--off-white);font-weight:700;white-space:nowrap;vertical-align:top">クロス→ライン切替</td>
+                  <td style="padding:10px 12px;color:rgba(240,238,232,.7)">コーチが交互にコースを変えて打つ。判断と反応を鍛える。</td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 12px;color:var(--off-white);font-weight:700;white-space:nowrap;vertical-align:top">連続ディグ</td>
+                  <td style="padding:10px 12px;color:rgba(240,238,232,.7)">3球連続でコーチが強打。体力と集中力も同時に鍛える。</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- D：サーブレシーブ専用ドリル -->
+      <div class="ac">
+        <div class="ac-h" onclick="togAc(this)">
+          <span class="ac-icon">🔄</span>
+          <span class="ac-title">D｜サーブレシーブ専用ドリル（アタック台使用）</span>
+          <span class="ac-arr">▼</span>
+        </div>
+        <div class="ac-b">
+          <div class="hb hb-info" style="margin-bottom:12px">
+            <strong>配置：</strong>コーチ＝サーブライン前にアタック台設置 ／ リベロ＝レセプションポジション ／ セッター＝定位置（セット練習を兼ねる）
+          </div>
+          <div class="flow-steps">
+            <div class="flow-step"><div class="flow-dot">1</div><div class="flow-body"><div class="flow-title">コーチがボールを出す</div><div class="flow-desc">アタック台からサーブ想定のボールを出す。</div></div></div>
+            <div class="flow-step"><div class="flow-dot">2</div><div class="flow-body"><div class="flow-title">リベロがAパスを返す</div><div class="flow-desc">セッターへAパスを返す。「足が先、手は後」の徹底。</div></div></div>
+            <div class="flow-step"><div class="flow-dot">3</div><div class="flow-body"><div class="flow-title">セッター→スパイカーへ</div><div class="flow-desc">セッターが簡単にトスを上げてスパイカーがフリーアタック。</div></div></div>
+            <div class="flow-step"><div class="flow-dot">4</div><div class="flow-body"><div class="flow-title">1セット5球 × 3セット</div><div class="flow-desc">セット間に30秒休憩。リベロ→セッター→スパイカーの一連の流れが連動して鍛えられる。</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- E：メンタル面の指導ポイント -->
+      <div class="ac">
+        <div class="ac-h" onclick="togAc(this)">
+          <span class="ac-icon">🧠</span>
+          <span class="ac-title">E｜メンタル面の指導ポイント</span>
+          <span class="ac-tag tag-imp">コーチメモ</span>
+          <span class="ac-arr">▼</span>
+        </div>
+        <div class="ac-b">
+          <div class="hb hb-muted" style="margin-bottom:10px">リベロはミスが直接失点につながるポジションのため、メンタルが削られやすい。</div>
+          <ul class="sl">
+            <li class="si"><div class="sn">1</div><div class="sb"><div class="st">ミス後は「次」の一言で切り替えさせる</div><div class="sd">長い声かけは逆効果。短く「次！」と言って前を向かせる。</div></div></li>
+            <li class="si"><div class="sn">2</div><div class="sb"><div class="st">「ナイスレシ！」の文化を作る</div><div class="sd">良いレシーブにチームメイトが必ず声で反応する文化を作る。リベロが孤立しない環境が大事。</div></div></li>
+            <li class="si"><div class="sn">3</div><div class="sb"><div class="st">個別に目標を渡す</div><div class="sd">「今日のお前のテーマはこれ」と個別に目標を伝える。チーム全体目標と個人目標を分ける。</div></div></li>
+            <li class="si"><div class="sn">4</div><div class="sb"><div class="st">NGワードには即介入する</div><div class="sd">「なんで取れないんだ」等のNGワードが出た場面には即介入する。ミスを責める声はチーム全体の雰囲気を壊す。</div></div></li>
+          </ul>
+        </div>
+      </div>
+
+    </div><!-- /pos-libero -->
+
+    <!-- セッター（準備中） -->
+    <div id="pos-setter" class="cat-sec">
+      <div class="hb hb-muted" style="margin-top:4px">セッター向けポジション別指導メモは順次追加予定。基本技術タブの「セッター技術」を参照してください。</div>
+    </div>
+
+    <!-- アウトサイドアタッカー（レフト） -->
+    <div id="pos-oh" class="cat-sec">
+      <div class="hb hb-muted" style="margin-top:4px">アウトサイドアタッカー（レフト）向けの専用指導メモは順次追加予定。基本技術タブ「(3)プレー技術 → ⑬スパイク」も参照してください。</div>
+      <div class="ey">REFERENCE VIDEO</div>
+      <a href="https://www.youtube.com/watch?v=MknqOUUujLs" target="_blank" class="video-link"><div class="vthumb">▶</div><div><div class="vt">スパイクフォームのイメージ：日本代表</div><div class="vs">プロのフォームをまず頭に焼き付ける</div></div></a>
+    </div>
+
+    <!-- オポジット（ライト） -->
+    <div id="pos-op" class="cat-sec">
+      <div class="hb hb-muted" style="margin-top:4px">オポジット（ライト）向けの専用指導メモは順次追加予定。基本技術タブ「(3)プレー技術 → ⑬スパイク」も参照してください。</div>
+    </div>
+
+    <!-- センター（ミドルブロッカー） -->
+    <div id="pos-mb" class="cat-sec">
+
+      <div class="style-card" style="margin-bottom:14px">
+        <div class="style-label">MIDDLE BLOCKER</div>
+        <div class="style-title">🧱 センターの動きの理解</div>
+        <div style="font-size:13px;color:rgba(240,238,232,.7);line-height:1.8">センターはブロックとクイック攻撃の両方を担う、コート上で最も忙しいポジション。ブロック後の切り替えの速さが、チーム全体の守備力を左右する。</div>
+      </div>
+
+      <div class="ac">
+        <div class="ac-h open" onclick="togAc(this)">
+          <span class="ac-icon">🧭</span>
+          <span class="ac-title">① セッターと一緒にブロックする場合</span>
+          <span class="ac-arr">▼</span>
+        </div>
+        <div class="ac-b open">
+          <ul class="sl">
+            <li class="si"><div class="sn">1</div><div class="sb"><div class="st">真後ろに下がる</div><div class="sd">セッターが前衛にいるとき、センターはブロックの着地からまっすぐ後方（アタックライン方向）に下がる。</div></div></li>
+            <li class="si"><div class="sn">2</div><div class="sb"><div class="st">セッターは前を通過する</div><div class="sd">セッターがトスに入るための移動ルートを塞がないよう、センターは自分の下がる動線を意識する。ぶつかると両方の対応が遅れる。</div></div></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="ac">
+        <div class="ac-h open" onclick="togAc(this)">
+          <span class="ac-icon">↘️</span>
+          <span class="ac-title">② セッターが後衛の場合</span>
+          <span class="ac-arr">▼</span>
+        </div>
+        <div class="ac-b open">
+          <ul class="sl">
+            <li class="si"><div class="sn">1</div><div class="sb"><div class="st">中央に向かって斜めに下がる</div><div class="sd">セッターが後衛（バックオーダー）のとき、センターは真後ろではなく中央方向へ斜めに下がり、二段トスに備えるポジションを取る。</div></div></li>
+            <li class="si"><div class="sn">2</div><div class="sb"><div class="st">セッターは前を通過する</div><div class="sd">この場合もセッターの移動ルートを優先する。誰が先に動くかをあらかじめ約束事として共有しておく。</div></div></li>
+          </ul>
+          <div class="cp-box">セッターが前衛か後衛かで下がり方が変わることを常に意識する。試合前・ローテーションのたびに自分で確認する癖をつける。</div>
+        </div>
+      </div>
+
+      <div class="ac">
+        <div class="ac-h open" onclick="togAc(this)">
+          <span class="ac-icon">🏃</span>
+          <span class="ac-title">③ 一歩助走を覚える</span>
+          <span class="ac-tag tag-imp">クイック対応</span>
+          <span class="ac-arr">▼</span>
+        </div>
+        <div class="ac-b open">
+          <div class="hb hb-gold" style="margin-bottom:10px"><strong>ブロックから戻ってクイックに入る場面では、通常の助走時間が確保できない。</strong></div>
+          <ul class="sl">
+            <li class="si"><div class="sn">1</div><div class="sb"><div class="st">一歩助走でタイミングを合わせる</div><div class="sd">2歩・3歩の助走が間に合わないときは、最小限の一歩で踏み切りタイミングを合わせる技術を身につける。</div></div></li>
+            <li class="si"><div class="sn">2</div><div class="sb"><div class="st">腕の振り上げでジャンプ力を補う</div><div class="sd">助走距離が短い分、腕の振り上げと踏み込みの強さでジャンプの高さを作る。</div></div></li>
+          </ul>
+          <div class="sci-box">一歩助走が使えると、クイックの選択肢が常に「ある」状態になり、相手ブロッカーへのプレッシャーが生まれる。</div>
+        </div>
+      </div>
+
+      <div class="ac">
+        <div class="ac-h open" onclick="togAc(this)">
+          <span class="ac-icon">👁️</span>
+          <span class="ac-title">④ 絶対にボールから目を離さない</span>
+          <span class="ac-tag tag-key">最重要</span>
+          <span class="ac-arr">▼</span>
+        </div>
+        <div class="ac-b open">
+          <ul class="sl">
+            <li class="si"><div class="sn">1</div><div class="sb"><div class="st">ブロック後も視線はボールに固定</div><div class="sd">着地の勢いで下を向いたり、味方を見たりせず、ボールの行方を追い続ける。</div></div></li>
+            <li class="si"><div class="sn">2</div><div class="sb"><div class="st">抜けたボールへの反応が生死を分ける</div><div class="sd">ブロックを抜けたボールに反応できるかどうかは、目を離さなかった選手だけに与えられるチャンス。</div></div></li>
+          </ul>
+          <div class="star-box"><div><strong>センターの基本姿勢：</strong>「跳んで終わり」ではなく「跳んで、見て、動く」。この3つを1セットで体に染み込ませる。</div></div>
+        </div>
+      </div>
+
+      <div class="ey">REFERENCE VIDEO</div>
+      <a href="https://www.youtube.com/watch?v=N1aVnY_MRDA" target="_blank" class="video-link"><div class="vthumb">▶</div><div><div class="vt">センター必見：ブロック後の動き方</div><div class="vs">ブロック後のポジショニングを学ぶ</div></div></a>
+    </div>
+
+  </div><!-- /coach-position -->
+
+  </div>
+
+<!-- ══════ コーチノート ══════ -->
+<div id="page-coachnote" class="page">
+
+  <!-- 役割・方針（既存） -->
+  <div class="cn-card">
+    <div class="cn-head"><div class="cn-ico">👨‍🏫</div><div class="cn-title">コーチの役割</div></div>
+    <div class="cn-body"><ul>
+      <li><strong>個々の技術ベースを上げる</strong>｜楽しくバレーをするには、正しい基礎技術が必要</li>
+      <li><strong>戦術サポート</strong>｜基本的にキャプテンを中心に方針を決める。その方針に沿ったサポートを実施</li>
+      <li><strong>みんなが達成したい目標のお手伝い</strong></li>
+      <li><strong>期間：今シーズン限定（1年間）</strong></li>
+    </ul></div>
+  </div>
+  <div class="cn-card">
+    <div class="cn-head"><div class="cn-ico">🎯</div><div class="cn-title">コーチの方針</div></div>
+    <div class="cn-body"><ul class="sl" style="list-style:none;padding:0">
+      <li class="si"><div class="sn">①</div><div class="sb"><div class="st">個別技術のレベルアップ</div><div class="sd">楽しくバレーをするには、正しい基礎技術が土台になる。一人ひとりのフォームと課題に向き合う。</div></div></li>
+      <li class="si"><div class="sn">②</div><div class="sb"><div class="st">なぜこの練習をするのか？わからないことは毎回説明する</div><div class="sd">理解しての取り組みは、練習効果を何倍にもする。選手からの「なぜ？」の質問はいつでも歓迎。納得してから反復することが最速の上達につながる。</div></div></li>
+      <li class="si"><div class="sn">③</div><div class="sb"><div class="st">チーム戦術の確立サポート</div><div class="sd">ディフェンス＆スピードのチームスタイルを確立するためのサポートをする。方針はキャプテンが中心。</div></div></li>
+    </ul></div>
+  </div>
+
+  <!-- ── 既存：行動計画メモ ── -->
+  <div class="ey">COACH MEMO</div>
+  <div class="memo-item"><div class="memo-num">①</div><div class="memo-body"><div class="memo-title">アタック台の補強作業</div><div class="memo-desc">制作済みアタック台の強度確認と補強。使用頻度が高いため、脚部・天板の接合部を定期チェックする。</div></div></div>
+  <div class="memo-item"><div class="memo-num">②</div><div class="memo-body"><div class="memo-title">テニスボールの仕入れ</div><div class="memo-desc">スパイクフォーム練習に使用。テニスボールで腕の軌道・ゼロポジションを感覚として習得するため。</div></div></div>
+  <div class="memo-item"><div class="memo-num">③</div><div class="memo-body"><div class="memo-title">池田高校への視察</div><div class="memo-desc">コーチの知人（池田高校監督）の元へ視察予定。練習メニューや指導ポイントをリサーチ。大斗も連れて行き練習に参加させる。夏休みに練習試合の打診も予定。</div></div></div>
+  <div class="memo-item"><div class="memo-num">④</div><div class="memo-body"><div class="memo-title">体育館のワックス状態の確認</div><div class="memo-desc">床がつるつる滑る状態のため、プレーの安全性に影響あり。まず現状を確認し、他のスポーツ部活団体とも協議の上、塗り直し等の対応を学校側と相談する。</div></div></div>
+</div>
+
+<script>
+/* ── PLAYERS DATA ── */
+const players = {
+  haruto:{
+    name:'ムラカミ ハルト',
+    meta:'2年生 ／ レフト ／ キャプテン ／ 出身：豊中九中バレー部',
+    issues:[
+      {t:'スパイクフォームの全面調整',
+       d:'今のフォームのまま続けても、バックアタックや崩れたボールへの対応力は身につかない。フォームを変えると一時的に打てなくなる時期があるけど、それは変化している証拠。まず取り組む具体的な方法はこれだ。①テニスボールを使って素振りをする（バレーボールより軽い分、腕の軌道・ゼロポジションの感覚だけに集中できる）→ ②鏡や動画で自分のフォームを確認しながら、被りの解消と左肩の引き上げを意識した素振りを繰り返す → ③フォームが定まってきたら手上げでボールを打ち始める。「まず感覚を体に入れる、その後ボールを打つ」この順番を守ること。'},
+      {t:'80%の力で助走・スパイクを打つ練習',
+       d:'今の課題は「全力で打てるポイントが小さい」こと。つまりトスや体勢が完璧なときしか強く打てていない。80%の力で助走し、80%の力で打つ練習を反復することで、コントロールできる範囲が広がり、多少ズレたトスでも安定して打てるようになる。試合の約5割は乱れたボールからのハイセット攻撃。100%の一発より、80%で確実に決められる引き出しを増やすことが、エースとしての得点力を大きく引き上げる。'}
+    ],
+    note:'キャプテンとして声の技術を先頭で習得・実践することで、チーム全体のプレーの質が上がる。コーチが運営をサポートするので、プレイヤーとして練習に集中する時間を作ること。'
+  },
+  kairi:{name:'キシタニ カイリ',meta:'2年生 ／ レフト＆ライト ／ 副キャプテン ／ 出身：渋谷中学校バレーボール部',issues:[],note:'個人課題は今後の練習の中で一緒に確認しながら追加していきます。'},
+  chihiro:{name:'タダ チヒロ',meta:'2年生 ／ セッター ／ 副キャプテン ／ 出身：バスケ部',issues:[],note:'個人課題は今後の練習の中で一緒に確認しながら追加していきます。'},
+  soma:{
+    name:'サイトウ ソウマ',
+    meta:'2年生 ／ セッター ／ 出身：バスケ部',
+    issues:[
+      {t:'セッターの基本姿勢・基礎技術の習得',
+       d:'初心者セッターがまず固めるべきことを順番通りにやっていこう。①右目基準の構え：ボールを常に頭の右側・右目で捉える癖をつける。これだけでトスの方向ブレが大きく減る。素振りの段階で鏡を見ながら確認しよう。② 足の出し方：レシーブが来た瞬間にへそをレフト方向へ向けながら落下点に入る。「足を動かしてからトスを上げる」この順番が絶対。足が止まった状態でトスを上げると全てが手打ちになる。③ポジショニング：ネットから1〜1.5m離れた位置を基本とし、レフト側アンテナ方向に向くのが基本姿勢。まずこの立ち位置から一切動かず、その場で来たボールをトスする練習から始めよう。④現状の癖の修正：体を反らして指だけで突くトスをやめる。上体をまっすぐ保ち、膝の力と体重移動を使って体全体で送り出す感覚に切り替えること。音が鳴るトスは突きすぎのサイン。'}
+    ],
+    note:'基礎が固まれば一気にチームの攻撃パターンが広がる。焦らず順番に積み上げよう。'
+  },
+  seishiro:{
+    name:'ナカヤマ セイシロウ',meta:'2年生 ／ センター ／ 出身：テニス部',
+    issues:[
+      {t:'ブロック後のカバー意識',d:'ブロックに跳んだ後、そのまま着地で終わっていない？ブロックが弾いたボールがどこに落ちるかを予測して、次の動作（カバーポジション）に素早く入る習慣をつけよう。センターは攻守の切り替えが速いほどチームへの貢献が大きくなるポジション。'},
+      {t:'ディフェンス意識の向上',d:'スパイクを打った後もボールが返ってくることを常に想定して動こう。打ちっぱなしにならず、着地と同時に次のプレーへの準備を始める。この意識があるかどうかでチームのディフェンス力が変わる。'}
+    ],note:''
+  },
+  yura:{
+    name:'ニシザワ ユラ',meta:'2年生 ／ センター ／ 出身：陸上部',
+    issues:[
+      {t:'ブロック後のカバー意識',d:'ブロックに跳んだ後、そのまま着地で終わっていない？ブロックが弾いたボールがどこに落ちるかを予測して、次の動作（カバーポジション）に素早く入る習慣をつけよう。陸上で鍛えた脚力を、こういった素早い移動にも活かしてほしい。'},
+      {t:'ディフェンス意識の向上',d:'スパイクを打った後もボールが返ってくることを常に想定して動こう。打ちっぱなしにならず、着地と同時に次のプレーへの準備を始める。'}
+    ],note:''
+  },
+  kanata:{name:'ミナミグチ カナタ',meta:'2年生 ／ ライト ／ 出身：サッカー部',issues:[],note:'個人課題は今後の練習の中で一緒に確認しながら追加していきます。'},
+  ryosuke_o:{
+    name:'オオシマ ジョウスケ',meta:'2年生 ／ レフト＆ライト ／ 出身：ソフトテニス部',
+    issues:[{t:'スパイクフォームの根本修正',d:'今は右手だけで打ちにいっているため、体の回転が全く使えていない。これが「力の割に打球が弱い」原因。左手（反対の手）を使って体全体を回転させる感覚を覚えれば、スパイクの威力が別物になる。まず回転盤を使って、打点での体の向きと左手の引き込みを別々に練習することから始めよう。テニスで培ったスイング感覚は絶対に活きる。'}],
+    note:''
+  },
+  riku:{
+    name:'ハラダ リク',meta:'2年生 ／ リベロ ／ 出身：野球部',
+    issues:[
+      {t:'フライング技術の習得',d:'低い姿勢（ひだ立ち姿勢）からレシーブできるようになると、守備範囲が一気に広がる。まずはボールを使わずに、しゃがんだ低い姿勢からフライングの動作だけを繰り返すところから始めよう。「飛び込む」という感覚より「ボールを追いかけた結果、床に伏せる」というイメージの方がうまくいく。胸から着地する感覚を覚えたら、少しずつボールを絡めていく。コーチが個別に一緒に練習する予定。'},
+      {t:'オーバーパス（サブセッター役割）の習得',d:'リベロはセッターが取れないボールをトスする場面が必ずある。サブセッターとして機能できると、チームの攻撃の幅が大きく広がる。今は基礎から丁寧に練習していこう。指を広げてボールを包むように触り、体全体で送り出す感覚を作ることが第一歩。野球で培った肩の強さと空間認識力は、オーバーパスにも活きてくる。コーチが個別に一緒に練習する予定。'}
+    ],
+    note:'野球外野手として培った落下点予測・動体視力・肩の強さはリベロとして大きな武器になる。フォームが固まれば一気に伸びる可能性がある。'
+  },
+  sota:{name:'クリバヤシ ソウタ',meta:'1年生 ／ 中学バレー経験者',issues:[],note:'個人課題は今後の練習の中で一緒に確認しながら追加していきます。'},
+  kaito:{name:'ヒラサワ カイト',meta:'1年生 ／ 出身：豊中11中バレー部（リベロ経験あり）',issues:[],note:'個人課題は今後の練習の中で一緒に確認しながら追加していきます。'},
+  haruta:{name:'マツモト ハルタ',meta:'1年生 ／ レフト ／ 出身：箕面2中バレー部',issues:[],note:'個人課題は今後の練習の中で一緒に確認しながら追加していきます。'},
+  takuto:{name:'ヤマナ タクト',meta:'1年生 ／ 出身：西山田中学校バレーボール部',issues:[],note:'腰を痛めた経験あり。練習中に無理を感じたら必ずコーチに伝えること。個人課題は今後の練習の中で一緒に確認しながら追加していきます。'},
+  ryosuke_f:{
+    name:'フクモト リョウスケ',meta:'1年生 ／ センター ／ 出身：バスケ部（バレー自主練2年）',
+    issues:[{t:'ブロック後のポジショニング',d:'ブロックを跳んだ後の動き方が分からなくても大丈夫、今から覚えよう。基本はこれだ。着地したらまずアタックラインまで素早く下がる。これが全ての起点になる。次に、セッターが前衛にいるか後衛にいるかで下がり方を変える。セッターが前衛のときは速攻に備えてアタックライン付近に留まり、セッターが後衛のときはディフェンスポジションへ深く入る。セッターのポジションを常に確認することが最優先。ブロック後の2歩助走クイックへの移行も、まずはこのポジショニングが自動化されてから取り組もう。'}],
+    note:'ジャンプ力という強力な武器がすでにある。ポジショニングとタイミングさえ覚えれば、チームの核になれる。'
+  },
+  kouki:{name:'イチハラ コウキ',meta:'1年生 ／ ポジション未定',issues:[],note:'ポジション・課題は今後の練習の中で一緒に確認しながら設定していきます。'},
+  keigo:{name:'キムラ ケイゴ',meta:'1年生 ／ 出身：サッカー部 ／ ポジション未定',issues:[],note:'ポジション・課題は今後の練習の中で一緒に確認しながら設定していきます。'},
+  mao:{name:'クロダ マオ',meta:'1年生 ／ 出身：テニス部 ／ ポジション未定',issues:[],note:'ポジション・課題は今後の練習の中で一緒に確認しながら設定していきます。'},
+  takeru:{
+    name:'トミヤマ タケル',meta:'1年生 ／ センター',
+    issues:[{t:'倒立を支えられる体幹・肩の筋力トレーニング',d:'倒立はスパイクの肩の使い方・フライング・ブロックの全てに直結する最重要トレーニングだ。今は壁倒立で体を支えるのが難しい状態だと思うけど、焦らなくていい。まず土台となる筋力をつけることから始めよう。具体的には毎日3つのことをやってほしい。①プランク（体幹）：まず30秒を目標に、慣れたら1分へ。②パイクプッシュアップ（肩の前面）：お尻を高く上げた逆V字姿勢で腕立て伏せをする。これが壁倒立に最も近い動作。③壁への手押し（肩甲骨の安定）：壁に手をついて肩甲骨を動かす練習。この3つを続けていれば、1か月後には壁倒立で体を支える感覚が必ずつかめる。'}],
+    note:''
+  },
+  kosuke:{name:'ヨシダ コウスケ',meta:'1年生 ／ ポジション未定',issues:[],note:'ポジション・課題は今後の練習の中で一緒に確認しながら設定していきます。'}
+};
+
+/* ── INDIVIDUAL COACHING BUTTONS ── */
+const personalOrder=['haruto','riku','ryosuke_o','soma','seishiro','yura','kairi','chihiro','kanata','sota','kaito','haruta','takuto','ryosuke_f','kouki','keigo','mao','takeru','kosuke'];
+const pbtnWrap=document.getElementById('pbtn-container');
+personalOrder.forEach((id,i)=>{
+  const p=players[id];if(!p)return;
+  const btn=document.createElement('button');
+  btn.className='pbtn'+(i===0?' active':'');
+  const shortName=p.name.split(' ')[1]||p.name;
+  btn.textContent=shortName;
+  btn.onclick=()=>{
+    document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    renderPlayerDetail(id);
+  };
+  pbtnWrap.appendChild(btn);
+});
+renderPlayerDetail('haruto');
+
+function renderPlayerDetail(id){
+  const p=players[id];if(!p)return;
+  const c=document.getElementById('player-detail-container');
+  let html=`<div class="hb hb-gold" style="margin-bottom:10px"><strong>${p.name}</strong><br><span style="font-size:11px;font-weight:400;color:var(--muted)">${p.meta}</span></div>`;
+  if(p.issues.length>0){
+    html+=`<div class="ey" style="margin-top:4px">PERSONAL TASK</div>`;
+    p.issues.forEach((iss,idx)=>{
+      html+=`<div class="ac"><div class="ac-h${idx===0?' open':''}" onclick="togAc(this)"><span class="ac-icon">📌</span><span class="ac-title">${iss.t}</span><span class="ac-arr">▼</span></div><div class="ac-b${idx===0?' open':''}"><p>${iss.d}</p></div></div>`;
+    });
+  }
+  if(p.note){html+=`<div class="hb hb-ok" style="margin-top:8px">${p.note}</div>`;}
+  if(p.issues.length===0&&!p.note){html+=`<div class="hb hb-muted">課題は今後の練習の中で一緒に確認しながら追加していきます。</div>`;}
+  c.innerHTML=html;
+}
+
+/* ── COUNTDOWN ── */
+(function(){
+  const targets=[
+    {label:'豊中練習試合',date:'2026-07-19',cls:'c-gold'},
+    {label:'大阪総体',date:'2026-07-25',cls:'c-crim'},
+    {label:'茨木市長杯',date:'2026-07-31',cls:'c-info'}
+  ];
+  function update(){
+    const now=new Date();
+    const html=targets.map(t=>{
+      const d=new Date(t.date+'T00:00:00');
+      const diff=Math.ceil((d-now)/(1000*60*60*24));
+      const days=diff>0?diff:0;
+      const dateStr=t.date.replace(/-/g,'/');
+      return `<div class="cd-box ${t.cls}">
+        <div class="cd-num">${days}</div>
+        <div class="cd-unit">日後</div>
+        <div class="cd-name">${t.label}</div>
+        <div class="cd-date">${dateStr}</div>
+      </div>`;
+    }).join('');
+    document.getElementById('cd-container').innerHTML=html;
+  }
+  update();setInterval(update,60000);
+})();
+
+/* ── MODAL ── */
+function openModal(id){
+  const p=players[id];if(!p)return;
+  document.getElementById('modal-name').textContent=p.name;
+  document.getElementById('modal-meta').textContent=p.meta;
+  let body='';
+  if(p.issues.length>0){
+    body+=`<div class="ey" style="margin-top:2px">PERSONAL TASK</div>`;
+    p.issues.forEach((iss,idx)=>{
+      body+=`<div class="ac"><div class="ac-h${idx===0?' open':''}" onclick="togAc(this)"><span class="ac-icon">📌</span><span class="ac-title">${iss.t}</span><span class="ac-arr">▼</span></div><div class="ac-b${idx===0?' open':''}"><p>${iss.d}</p></div></div>`;
+    });
+  }
+  if(p.note){body+=`<div class="hb hb-ok" style="margin-top:8px">${p.note}</div>`;}
+  if(!body){body=`<div class="hb hb-muted">課題は今後の練習の中で一緒に確認しながら追加していきます。</div>`;}
+  document.getElementById('modal-body').innerHTML=body;
+  document.getElementById('playerModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){document.getElementById('playerModal').classList.remove('open');document.body.style.overflow='';}
+function closeModalOutside(e){if(e.target===document.getElementById('playerModal'))closeModal();}
+function showPage(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo(0,0);
+}
+function showCoach(id,btn){
+  document.querySelectorAll('.coach-sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('coach-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+function showCat(id,btn){
+  // スコープを親 coach-sec 内に限定
+  const target=document.getElementById(id);
+  if(!target)return;
+  const parent=target.closest('.coach-sec')||document;
+  parent.querySelectorAll('.cat-sec').forEach(s=>s.classList.remove('active'));
+  // cat-btn も同じ親内だけ
+  const btnParent=btn.closest('.coach-sec')||btn.closest('.cat-wrap')||document;
+  btnParent.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+  target.classList.add('active');
+  btn.classList.add('active');
+}
+function showSpike(id,btn){
+  document.querySelectorAll('.spike-phase').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.phase-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+function showMenu(id,btn){
+  document.querySelectorAll(".menu-tab").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll("#page-menu .stab").forEach(b=>b.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  btn.classList.add("active");
+}
+function togAc(h){const b=h.nextElementSibling;h.classList.toggle('open');b.classList.toggle('open');}
+function togSc(h){const b=h.nextElementSibling;h.classList.toggle('open');b.classList.toggle('open');}
+</script>
+</body>
+</html>
